@@ -11,5 +11,5 @@ public interface IAppDbContext
 	public DbSet<HVS> HVS { get; set; }
 	public DbSet<Energy> Energy { get; set; }
 	public DbSet<EnergyMeter> EnergyMeter { get; set; }
-	Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+	Task<int> SaveChangesAsync(CancellationToken cancellationToken); //TODO: Возможно придется убрать
 }

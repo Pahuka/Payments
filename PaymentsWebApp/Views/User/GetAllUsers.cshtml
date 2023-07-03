@@ -1,0 +1,45 @@
+﻿@model List<Infrastructure.ViewModels.UserViewModel>
+
+<div class="form-inline shadow p-3 mb-5 bg-light rounded">
+	<h3 class="mb-0 text-center ParagraphHome">Все пользователи</h3>
+	<table class="table table-striped shadow p-3 mb-5 bg-light rounded">
+		<thead>
+			<tr>
+				<th>Имя</th>
+				<th>Фамилия</th>
+				<th>Логин</th>
+				<th>Прибор учета электроэнергии</th>
+				<th>Прибор учета горячей воды</th>
+				<th>Прибор учета холодной воды</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var user in Model)
+			{
+				<tr>
+					<th scope="row">@user.FirstName</th>
+					<td>@user.LastName</td>
+					<td>@user.Login</td>
+					<td>@user.HasEnergyMeter</td>
+					<td>@user.HasGvsMeter</td>
+					<td>@user.HasHvsMeter</td>
+					@*<td>
+				<div class="m-1">
+				<form asp-controller="User" asp-action="EditUser" method="get">
+				<input type="text" id="login" name="login" value="@user.Login" hidden="true"/>
+				<input type="submit" value="Редактировать" class="btn btn-outline-dark"/>
+				</form>
+				<form asp-controller="User" asp-action="RemoveUser">
+				<input type="text" id="login" name="login" value="@user.Login" hidden="true"/>
+				<input type="submit" value="Удалить" class="btn btn-outline-dark"/>
+				</form>
+				</div>
+				</td>*@
+				</tr>
+			}
+		</tbody>
+	</table>
+	<form asp-controller="User" asp-action="CreateUser" method="get">
+		<input type="submit" value="Добавить" class="btn btn-outline-dark" />
+	</form>
+</div>

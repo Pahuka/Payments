@@ -4,6 +4,6 @@ namespace Domain.Entities;
 
 public class GVS : EntityBase
 {
-    public double CurrentValue { get; set; }
-    public Statistic? Statistic { get; set; }
+	public double CurrentValue { get; set; }
+	public Statistic? Statistic { get; set; }
 }

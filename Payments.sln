@@ -3,16 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{AEB0B6D8-C8EA-4A97-ADA8-A25E77D7886E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{AEB0B6D8-C8EA-4A97-ADA8-A25E77D7886E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{E6FB4278-04C4-4246-966D-4C0116B49B36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{E6FB4278-04C4-4246-966D-4C0116B49B36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{66A48153-1683-4E43-A502-77DD3355667E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{66A48153-1683-4E43-A502-77DD3355667E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentsWeb", "PaymentsWeb\PaymentsWeb.csproj", "{B7DC312C-2961-49E8-A4D6-684DD010522D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{66A48153-1683-4E43-A502-77DD3355667E} = {66A48153-1683-4E43-A502-77DD3355667E}
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentsWebApp", "PaymentsWebApp\PaymentsWebApp.csproj", "{DBEB84C9-C69D-441C-AD59-B8A30B454C0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,10 +29,10 @@ Global
 		{66A48153-1683-4E43-A502-77DD3355667E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66A48153-1683-4E43-A502-77DD3355667E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66A48153-1683-4E43-A502-77DD3355667E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7DC312C-2961-49E8-A4D6-684DD010522D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7DC312C-2961-49E8-A4D6-684DD010522D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7DC312C-2961-49E8-A4D6-684DD010522D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7DC312C-2961-49E8-A4D6-684DD010522D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBEB84C9-C69D-441C-AD59-B8A30B454C0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBEB84C9-C69D-441C-AD59-B8A30B454C0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBEB84C9-C69D-441C-AD59-B8A30B454C0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBEB84C9-C69D-441C-AD59-B8A30B454C0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
