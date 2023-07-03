@@ -21,7 +21,8 @@ public class UserRepository : IUserRepository
 
 	public async Task<IQueryable<User>> GetAll()
 	{
-		return _appDbContext.Users.AsQueryable().Include(x => x.Statistic);
+		return _appDbContext.Users.AsQueryable()
+			.Include(x => x.Statistic);
 	}
 
 	public async Task<bool> DeleteAsync(User entity)
@@ -40,6 +41,15 @@ public class UserRepository : IUserRepository
 
 	public async Task<User> Get(string login)
 	{
-		return await _appDbContext.Users.Include(x => x.Statistic).FirstOrDefaultAsync(x => x.Login.Equals(login));
+		return await _appDbContext.Users
+			.Include(x => x.Statistic)
+			.FirstOrDefaultAsync(x => x.Login.Equals(login));
+	}
+
+	public async Task<User> GetById(Guid id)
+	{
+		return await _appDbContext.Users
+			.Include(x => x.Statistic)
+			.FirstOrDefaultAsync(x => x.Login.Equals(id));
 	}
 }

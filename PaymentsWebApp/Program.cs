@@ -12,7 +12,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IAppDbContext, AppDbContext>();
 var connetion = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connetion));
-//builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
+builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
+builder.Services.AddTransient<IEnergyRepository, EnergyRepository>();
+builder.Services.AddTransient<IEnergyMeterRepository, EnergyMeterRepository>();
+builder.Services.AddTransient<IHVSRepository, HVSRepository>();
+builder.Services.AddTransient<IGVSRepository, GVSRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
 
