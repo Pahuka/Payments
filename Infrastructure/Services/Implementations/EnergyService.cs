@@ -6,59 +6,59 @@ using Infrastructure.ViewModels;
 
 namespace Infrastructure.Services.Implementations;
 
-public class GVSService : IGVSService
+public class EnergyService : IEnergyService
 {
-	private readonly IGVSRepository _gvsRepository;
+	private readonly IEnergyRepository _energyRepository;
 	private readonly IStatisticRepository _statisticRepository;
 
-	public GVSService(IGVSRepository gvsRepository, IStatisticRepository statisticRepository)
+	public EnergyService(IEnergyRepository energyRepository, IStatisticRepository statisticRepository)
 	{
-		_gvsRepository = gvsRepository;
+		_energyRepository = energyRepository;
 		_statisticRepository = statisticRepository;
 	}
 
-	public async Task<IResponce<IList<GVSViewModel>>> GetAll()
+	public async Task<IResponce<IList<EnergyViewModel>>> GetAll()
 	{
-		var responce = new Responce<IList<GVSViewModel>> { Data = new List<GVSViewModel>() };
+		var responce = new Responce<IList<EnergyViewModel>> { Data = new List<EnergyViewModel>() };
 		try
 		{
-			var gvses = _gvsRepository.GetAll().Result;
+			var energies = _energyRepository.GetAll().Result;
 
-			if (gvses.Count() == 0)
+			if (energies.Count() == 0)
 			{
 				responce.Description = "Показания не найдены";
 				return responce;
 			}
 
-			foreach (var gvs in gvses)
-				responce.Data.Add(new GVSViewModel(gvs)
+			foreach (var energy in energies)
+				responce.Data.Add(new EnergyViewModel(energy)
 				{
-					Statistic = new StatisticViewModel(gvs?.Statistic)
+					Statistic = new StatisticViewModel(energy?.Statistic)
 				});
 
 			return responce;
 		}
 		catch (Exception e)
 		{
-			return new Responce<IList<GVSViewModel>>
+			return new Responce<IList<EnergyViewModel>>
 			{
 				Description = $"[GetAll] : {e.Message}"
 			};
 		}
 	}
 
-	public async Task<IResponce<bool>> Create(GVSViewModel viewModel)
+	public async Task<IResponce<bool>> Create(EnergyViewModel viewModel)
 	{
 		var responce = new Responce<bool>();
 		try
 		{
-			var gvs = new GVS
+			var energy = new Energy()
 			{
 				CurrentValue = viewModel.CurrentValue,
 				Statistic = await _statisticRepository.Get(viewModel.Statistic.Id)
 			};
 
-			responce.Data = await _gvsRepository.Create(gvs);
+			responce.Data = await _energyRepository.Create(energy);
 
 			return responce;
 		}
@@ -72,59 +72,59 @@ public class GVSService : IGVSService
 		}
 	}
 
-	public async Task<IResponce<GVSViewModel>> Edit(GVSViewModel viewModel)
+	public async Task<IResponce<EnergyViewModel>> Edit(EnergyViewModel viewModel)
 	{
-		var responce = new Responce<GVSViewModel>();
+		var responce = new Responce<EnergyViewModel>();
 		try
 		{
-			var gvs = await _gvsRepository.Get(viewModel.Id);
+			var energy = await _energyRepository.Get(viewModel.Id);
 
-			if (gvs == null)
+			if (energy == null)
 			{
 				responce.Description = "Показания не найдены";
 				return responce;
 			}
 
-			gvs.CurrentValue = viewModel.CurrentValue;
-			gvs.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
+			energy.CurrentValue = viewModel.CurrentValue;
+			energy.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
 
-			await _gvsRepository.Update(gvs);
+			await _energyRepository.Update(energy);
 			responce.Data = viewModel;
 
 			return responce;
 		}
 		catch (Exception e)
 		{
-			return new Responce<GVSViewModel>
+			return new Responce<EnergyViewModel>
 			{
 				Description = $"[Edit] : {e.Message}"
 			};
 		}
 	}
 
-	public async Task<IResponce<GVSViewModel>> GetById(Guid id)
+	public async Task<IResponce<EnergyViewModel>> GetById(Guid id)
 	{
-		var responce = new Responce<GVSViewModel>();
+		var responce = new Responce<EnergyViewModel>();
 		try
 		{
-			var gvs = await _gvsRepository.Get(id);
+			var energy = await _energyRepository.Get(id);
 
-			if (gvs == null)
+			if (energy == null)
 			{
 				responce.Description = "Показания не найдены";
 				return responce;
 			}
 
-			responce.Data = new GVSViewModel(gvs)
+			responce.Data = new EnergyViewModel(energy)
 			{
-				Statistic = new StatisticViewModel(gvs?.Statistic)
+				Statistic = new StatisticViewModel(energy?.Statistic)
 			};
 
 			return responce;
 		}
 		catch (Exception e)
 		{
-			return new Responce<GVSViewModel>
+			return new Responce<EnergyViewModel>
 			{
 				Description = $"[GetById] : {e.Message}"
 			};
@@ -136,14 +136,14 @@ public class GVSService : IGVSService
 		var responce = new Responce<bool>();
 		try
 		{
-			var gvs = await _gvsRepository.Get(id);
-			if (gvs == null)
+			var energy = await _energyRepository.Get(id);
+			if (energy == null)
 			{
 				responce.Description = $"Показание с ID {id} не найдено";
 				return responce;
 			}
 
-			responce.Data = await _gvsRepository.DeleteAsync(gvs);
+			responce.Data = await _energyRepository.DeleteAsync(energy);
 			return responce;
 		}
 		catch (Exception e)

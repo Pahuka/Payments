@@ -11,6 +11,7 @@ public class StatisticViewModel : ViewModelBase
 
 	public StatisticViewModel(Statistic statistic)
 	{
+		Id = statistic.Id;
 		HVS = new HVSViewModel(statistic?.HVS){Statistic = this};
 		GVS = new GVSViewModel(statistic?.GVS) {Statistic = this};
 		Energy = new EnergyViewModel(statistic?.Energy) { Statistic = this };

@@ -11,6 +11,7 @@ public class EnergyMeterViewModel : ViewModelBase
 
 	public EnergyMeterViewModel(EnergyMeter energyMeter)
 	{
+		Id = energyMeter.Id;
 		CurrentValueDay = energyMeter.CurrentValueDay;
 		CurrentValueNight = energyMeter.CurrentValueNight;
 	}

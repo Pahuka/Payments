@@ -11,6 +11,7 @@ public class EnergyViewModel : ViewModelBase
 
 	public EnergyViewModel(Energy energy)
 	{
+		Id = energy.Id;
 		CurrentValue = energy.CurrentValue;
 	}
 

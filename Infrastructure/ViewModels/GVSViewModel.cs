@@ -10,6 +10,7 @@ public class GVSViewModel : ViewModelBase
 	}
 	public GVSViewModel(GVS gvs)
 	{
+		Id = gvs.Id;
 		CurrentValue = gvs.CurrentValue;
 	}
 

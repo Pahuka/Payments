@@ -6,59 +6,59 @@ using Infrastructure.ViewModels;
 
 namespace Infrastructure.Services.Implementations;
 
-public class GVSService : IGVSService
+public class HVSService : IHVSService
 {
-	private readonly IGVSRepository _gvsRepository;
+	private readonly IHVSRepository _hvsRepository;
 	private readonly IStatisticRepository _statisticRepository;
 
-	public GVSService(IGVSRepository gvsRepository, IStatisticRepository statisticRepository)
+	public HVSService(IHVSRepository hvsRepository, IStatisticRepository statisticRepository)
 	{
-		_gvsRepository = gvsRepository;
+		_hvsRepository = hvsRepository;
 		_statisticRepository = statisticRepository;
 	}
 
-	public async Task<IResponce<IList<GVSViewModel>>> GetAll()
+	public async Task<IResponce<IList<HVSViewModel>>> GetAll()
 	{
-		var responce = new Responce<IList<GVSViewModel>> { Data = new List<GVSViewModel>() };
+		var responce = new Responce<IList<HVSViewModel>> { Data = new List<HVSViewModel>() };
 		try
 		{
-			var gvses = _gvsRepository.GetAll().Result;
+			var hvses = _hvsRepository.GetAll().Result;
 
-			if (gvses.Count() == 0)
+			if (hvses.Count() == 0)
 			{
 				responce.Description = "Показания не найдены";
 				return responce;
 			}
 
-			foreach (var gvs in gvses)
-				responce.Data.Add(new GVSViewModel(gvs)
+			foreach (var hvs in hvses)
+				responce.Data.Add(new HVSViewModel(hvs)
 				{
-					Statistic = new StatisticViewModel(gvs?.Statistic)
+					Statistic = new StatisticViewModel(hvs?.Statistic)
 				});
 
 			return responce;
 		}
 		catch (Exception e)
 		{
-			return new Responce<IList<GVSViewModel>>
+			return new Responce<IList<HVSViewModel>>
 			{
 				Description = $"[GetAll] : {e.Message}"
 			};
 		}
 	}
 
-	public async Task<IResponce<bool>> Create(GVSViewModel viewModel)
+	public async Task<IResponce<bool>> Create(HVSViewModel viewModel)
 	{
 		var responce = new Responce<bool>();
 		try
 		{
-			var gvs = new GVS
+			var hvs = new HVS()
 			{
 				CurrentValue = viewModel.CurrentValue,
 				Statistic = await _statisticRepository.Get(viewModel.Statistic.Id)
 			};
 
-			responce.Data = await _gvsRepository.Create(gvs);
+			responce.Data = await _hvsRepository.Create(hvs);
 
 			return responce;
 		}
@@ -72,59 +72,59 @@ public class GVSService : IGVSService
 		}
 	}
 
-	public async Task<IResponce<GVSViewModel>> Edit(GVSViewModel viewModel)
+	public async Task<IResponce<HVSViewModel>> Edit(HVSViewModel viewModel)
 	{
-		var responce = new Responce<GVSViewModel>();
+		var responce = new Responce<HVSViewModel>();
 		try
 		{
-			var gvs = await _gvsRepository.Get(viewModel.Id);
+			var hvs = await _hvsRepository.Get(viewModel.Id);
 
-			if (gvs == null)
+			if (hvs == null)
 			{
 				responce.Description = "Показания не найдены";
 				return responce;
 			}
 
-			gvs.CurrentValue = viewModel.CurrentValue;
-			gvs.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
+			hvs.CurrentValue = viewModel.CurrentValue;
+			hvs.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
 
-			await _gvsRepository.Update(gvs);
+			await _hvsRepository.Update(hvs);
 			responce.Data = viewModel;
 
 			return responce;
 		}
 		catch (Exception e)
 		{
-			return new Responce<GVSViewModel>
+			return new Responce<HVSViewModel>
 			{
 				Description = $"[Edit] : {e.Message}"
 			};
 		}
 	}
 
-	public async Task<IResponce<GVSViewModel>> GetById(Guid id)
+	public async Task<IResponce<HVSViewModel>> GetById(Guid id)
 	{
-		var responce = new Responce<GVSViewModel>();
+		var responce = new Responce<HVSViewModel>();
 		try
 		{
-			var gvs = await _gvsRepository.Get(id);
+			var hvs = await _hvsRepository.Get(id);
 
-			if (gvs == null)
+			if (hvs == null)
 			{
 				responce.Description = "Показания не найдены";
 				return responce;
 			}
 
-			responce.Data = new GVSViewModel(gvs)
+			responce.Data = new HVSViewModel(hvs)
 			{
-				Statistic = new StatisticViewModel(gvs?.Statistic)
+				Statistic = new StatisticViewModel(hvs?.Statistic)
 			};
 
 			return responce;
 		}
 		catch (Exception e)
 		{
-			return new Responce<GVSViewModel>
+			return new Responce<HVSViewModel>
 			{
 				Description = $"[GetById] : {e.Message}"
 			};
@@ -136,14 +136,14 @@ public class GVSService : IGVSService
 		var responce = new Responce<bool>();
 		try
 		{
-			var gvs = await _gvsRepository.Get(id);
-			if (gvs == null)
+			var hvs = await _hvsRepository.Get(id);
+			if (hvs == null)
 			{
 				responce.Description = $"Показание с ID {id} не найдено";
 				return responce;
 			}
 
-			responce.Data = await _gvsRepository.DeleteAsync(gvs);
+			responce.Data = await _hvsRepository.DeleteAsync(hvs);
 			return responce;
 		}
 		catch (Exception e)

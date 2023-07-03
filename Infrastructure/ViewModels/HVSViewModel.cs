@@ -11,6 +11,7 @@ public class HVSViewModel : ViewModelBase
 
 	public HVSViewModel(HVS hvs)
 	{
+		Id = hvs.Id;
 		CurrentValue = hvs.CurrentValue;
 	}
 

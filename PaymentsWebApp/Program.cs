@@ -19,6 +19,11 @@ builder.Services.AddTransient<IHVSRepository, HVSRepository>();
 builder.Services.AddTransient<IGVSRepository, GVSRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IStatisticService, StatisticService>();
+builder.Services.AddTransient<IEnergyService, EnergyService>();
+builder.Services.AddTransient<IEnergyMeterService, EnergyMeterService>();
+builder.Services.AddTransient<IGVSService, GVSService>();
+builder.Services.AddTransient<IHVSService, HVSService>();
 
 var app = builder.Build();
 
