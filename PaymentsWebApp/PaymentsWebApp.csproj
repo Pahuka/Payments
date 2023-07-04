@@ -7,14 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\Statistic\**" />
-    <Content Remove="Views\Statistic\**" />
-    <EmbeddedResource Remove="Views\Statistic\**" />
-    <None Remove="Views\Statistic\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Controllers\StatisticController.cs" />
+    <None Include="Views\Statistic\CreateEnergyStatistic.cshtml" />
+    <None Include="Views\Statistic\GetAllEnergyStatistic.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

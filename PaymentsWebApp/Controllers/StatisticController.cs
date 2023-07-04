@@ -6,28 +6,44 @@ namespace PaymentsWebApp.Controllers;
 
 public class StatisticController : Controller
 {
-	private readonly IStatisticService _statisticService;
+	private readonly IEnergyService _energyService;
+	private readonly IGVSService _gvsService;
+	private readonly IHVSService _hvsService;
 	private readonly IUserService _userService;
 
-	public StatisticController(IStatisticService statisticService, IUserService userService)
+	public StatisticController(IUserService userService, IEnergyService energyService, IHVSService hvsService,
+		IGVSService gvsService)
 	{
-		_statisticService = statisticService;
 		_userService = userService;
+		_energyService = energyService;
+		_hvsService = hvsService;
+		_gvsService = gvsService;
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> CreateStatistic()
+	public IActionResult CreateEnergyStatistic()
 	{
-		var user = await _userService.GetByLogin("1");
-		return View(new StatisticViewModel(){ User = user.Data });
+		return View(new EnergyViewModel());
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> CreateStatistic(StatisticViewModel statisticViewModel)
+	public async Task<IActionResult> CreateEnergyStatistic(EnergyViewModel energyViewModel)
 	{
-		var responce = await _statisticService.Create(statisticViewModel);
+		var responce = await _energyService.Create(energyViewModel);
 		if (responce.Data)
-			return RedirectToAction("GetAllStatistics");
+			return RedirectToAction("GetAllEnergyStatistic");
+
+		TempData["Message"] = responce.Description;
+		return RedirectToAction("Error");
+	}
+
+	[HttpGet]
+	public async Task<IActionResult> GetAllEnergyStatistic()
+	{
+		var responce = await _energyService.GetAll();
+		if (responce.Data != null)
+			return View(responce.Data.ToList());
+
 
 		TempData["Message"] = responce.Description;
 		return RedirectToAction("Error");
@@ -37,17 +53,5 @@ public class StatisticController : Controller
 	{
 		ViewBag.Message = TempData["Message"];
 		return View();
-	}
-
-	[HttpGet]
-	public async Task<IActionResult> GetAllStatistics()
-	{
-		var responce = await _statisticService.GetAll();
-		if (responce.Data != null)
-			return View(responce.Data.ToList());
-
-
-		TempData["Message"] = responce.Description;
-		return RedirectToAction("Error");
 	}
 }
