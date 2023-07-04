@@ -23,6 +23,7 @@ public class UserViewModel : ViewModelBase
 		HasEnergyMeter = user.HasEnergyMeter;
 		HasGvsMeter = user.HasGvsMeter;
 		HasHvsMeter = user.HasHvsMeter;
+		PeopleCount = user.PeopleCount;
 		EnergyStatistic = new List<EnergyViewModel>();
 		GVSStatistic = new List<GVSViewModel>();
 		HVSStatistic = new List<HVSViewModel>();
@@ -35,6 +36,7 @@ public class UserViewModel : ViewModelBase
 	public IList<EnergyViewModel> EnergyStatistic { get; set; }
 	public IList<GVSViewModel> GVSStatistic { get; set; }
 	public IList<HVSViewModel> HVSStatistic { get; set; }
+	public int PeopleCount { get; set; }
 	public bool HasHvsMeter { get; set; }
 	public bool HasGvsMeter { get; set; }
 	public bool HasEnergyMeter { get; set; }

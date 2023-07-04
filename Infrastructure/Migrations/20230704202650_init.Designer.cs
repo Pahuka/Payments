@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230704171607_init")]
+    [Migration("20230704202650_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -38,6 +38,9 @@ namespace Infrastructure.Migrations
                     b.Property<double>("NormativValue")
                         .HasColumnType("REAL");
 
+                    b.Property<double>("TotalResult")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -61,6 +64,9 @@ namespace Infrastructure.Migrations
                     b.Property<double>("CurrentValue")
                         .HasColumnType("REAL");
 
+                    b.Property<double>("TotalResult")
+                        .HasColumnType("REAL");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -82,6 +88,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<double>("CurrentValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("TotalResult")
                         .HasColumnType("REAL");
 
                     b.Property<string>("UserId")
@@ -128,6 +137,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("PeopleCount")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

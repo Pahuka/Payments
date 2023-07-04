@@ -8,6 +8,10 @@ namespace Infrastructure.Services.Implementations;
 
 public class EnergyService : IEnergyService
 {
+	private readonly double _tarifNormativ = 4.28;
+	private readonly double _tarifDay = 4.9;
+	private readonly double _tarifNight = 2.31;
+	private readonly double _normativ = 164;
 	private readonly IEnergyRepository _energyRepository;
 	private readonly IUserRepository _userRepository;
 
@@ -60,7 +64,10 @@ public class EnergyService : IEnergyService
 				UserId = viewModel.UserId
 			};
 
-			responce.Data = await _energyRepository.Create(energy);
+			var user = await _userRepository.GetById(viewModel.UserId);
+
+			responce.Data = await _energyRepository.Create(await TakeStatisticResult(energy, user));
+
 			return responce;
 		}
 		catch (Exception e)
@@ -156,5 +163,25 @@ public class EnergyService : IEnergyService
 				Data = false
 			};
 		}
+	}
+
+	private async Task<Energy> TakeStatisticResult(Energy currentEnergy, User user)
+	{
+		var lastEnergy = user.EnergyStatistic.LastOrDefault();
+
+		if (lastEnergy == null)
+			return currentEnergy;
+
+		if (user.HasEnergyMeter)
+		{
+			currentEnergy.TotalResult += (currentEnergy.DayValue - lastEnergy.DayValue) * _tarifDay;
+			currentEnergy.TotalResult += (currentEnergy.NightValue - lastEnergy.NightValue) * _tarifNight;
+		}
+		else
+		{
+			currentEnergy.TotalResult += (user.PeopleCount * _normativ) * _tarifNormativ;
+		}
+
+		return currentEnergy;
 	}
 }

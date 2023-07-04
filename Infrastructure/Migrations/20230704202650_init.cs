@@ -20,6 +20,7 @@ namespace Infrastructure.Migrations
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
                     Login = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
+                    PeopleCount = table.Column<int>(type: "INTEGER", nullable: false),
                     HasHvsMeter = table.Column<bool>(type: "INTEGER", nullable: false),
                     HasGvsMeter = table.Column<bool>(type: "INTEGER", nullable: false),
                     HasEnergyMeter = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -38,6 +39,7 @@ namespace Infrastructure.Migrations
                     NormativValue = table.Column<double>(type: "REAL", nullable: false),
                     DayValue = table.Column<double>(type: "REAL", nullable: false),
                     NightValue = table.Column<double>(type: "REAL", nullable: false),
+                    TotalResult = table.Column<double>(type: "REAL", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -58,6 +60,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     CurrentValue = table.Column<double>(type: "REAL", nullable: false),
+                    TotalResult = table.Column<double>(type: "REAL", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -78,6 +81,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     CurrentValue = table.Column<double>(type: "REAL", nullable: false),
+                    TotalResult = table.Column<double>(type: "REAL", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },

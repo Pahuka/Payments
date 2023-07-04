@@ -18,6 +18,7 @@ public class User : EntityBase
 	public IList<Energy> EnergyStatistic { get; set; }
 	public IList<GVS> GVSStatistic { get; set; }
 	public IList<HVS> HVSStatistic { get; set; }
+	public int PeopleCount { get; set; }
 	public bool HasHvsMeter { get; set; }
 	public bool HasGvsMeter { get; set; }
 	public bool HasEnergyMeter { get; set; }

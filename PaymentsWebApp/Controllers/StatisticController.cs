@@ -21,9 +21,10 @@ public class StatisticController : Controller
 	}
 
 	[HttpGet]
-	public IActionResult CreateEnergyStatistic(Guid userId)
+	public async Task<IActionResult> CreateEnergyStatistic(Guid userId)
 	{
-		return View(new EnergyViewModel() { UserId = userId });
+		var user = await _userService.GetById(userId);
+		return View(new EnergyViewModel() { User = user.Data, UserId = userId });
 	}
 
 	[HttpPost]
@@ -56,7 +57,7 @@ public class StatisticController : Controller
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> GetUser(string login)
+	public async Task<IActionResult> GetCurrentUserStatistic(string login)
 	{
 		var responce = await _userService.GetByLogin(login);
 		if (responce.Data != null)
