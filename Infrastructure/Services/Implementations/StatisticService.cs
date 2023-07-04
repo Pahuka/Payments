@@ -69,11 +69,11 @@ public class StatisticService : IStatisticService
 		{
 			var statistic = new Statistic
 			{
-				//User = viewModel.User,
-				//Energy = viewModel.Energy,
-				//HVS = viewModel.HVS,
-				//GVS = viewModel.GVS,
-				//EnergyMeter = viewModel.EnergyMeter
+				User = viewModel.User != null ? await _userRepository.Get(viewModel.User.Login) : null,
+				Energy = viewModel.Energy != null ? await _energyRepository.Get(viewModel.Energy.Id) : null,
+				HVS = viewModel.HVS != null ? await _hvsRepository.Get(viewModel.HVS.Id) : null,
+				GVS = viewModel.GVS != null ? await _gvsRepository.Get(viewModel.GVS.Id) : null,
+				EnergyMeter = viewModel.EnergyMeter != null ? await _energyMeterRepository.Get(viewModel.EnergyMeter.Id) : null,
 			};
 
 			responce.Data = await _statisticRepository.Create(statistic);

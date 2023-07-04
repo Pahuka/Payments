@@ -5,5 +5,6 @@ namespace Domain.Entities;
 public class HVS : EntityBase
 {
 	public double CurrentValue { get; set; }
-	public Statistic? Statistic { get; set; }
+	public User? User { get; set; }
+	public Guid UserId { get; set; }
 }

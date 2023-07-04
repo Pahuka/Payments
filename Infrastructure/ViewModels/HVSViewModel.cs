@@ -16,5 +16,5 @@ public class HVSViewModel : ViewModelBase
 	}
 
 	public double CurrentValue { get; set; }
-	public StatisticViewModel? Statistic { get; set; }
+	public UserViewModel? User { get; set; }
 }

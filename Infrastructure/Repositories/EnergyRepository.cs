@@ -21,7 +21,7 @@ public class EnergyRepository : IEnergyRepository
 
 	public async Task<IQueryable<Energy>> GetAll()
 	{
-		return _appDbContext.Energy.AsQueryable().Include(x => x.Statistic);
+		return _appDbContext.Energy.AsQueryable().Include(x => x.User);
 	}
 
 	public async Task<bool> DeleteAsync(Energy entity)
@@ -41,7 +41,7 @@ public class EnergyRepository : IEnergyRepository
 	public async Task<Energy> Get(Guid Id)
 	{
 		return await _appDbContext.Energy
-			.Include(x => x.Statistic)
+			.Include(x => x.User)
 			.FirstOrDefaultAsync(x => x.Id.Equals(Id));
 	}
 }

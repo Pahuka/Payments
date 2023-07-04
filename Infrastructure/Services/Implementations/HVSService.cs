@@ -9,12 +9,12 @@ namespace Infrastructure.Services.Implementations;
 public class HVSService : IHVSService
 {
 	private readonly IHVSRepository _hvsRepository;
-	private readonly IStatisticRepository _statisticRepository;
+	private readonly IUserRepository _userRepository;
 
-	public HVSService(IHVSRepository hvsRepository, IStatisticRepository statisticRepository)
+	public HVSService(IHVSRepository hvsRepository, IUserRepository userRepository)
 	{
 		_hvsRepository = hvsRepository;
-		_statisticRepository = statisticRepository;
+		_userRepository = userRepository;
 	}
 
 	public async Task<IResponce<IList<HVSViewModel>>> GetAll()
@@ -33,7 +33,7 @@ public class HVSService : IHVSService
 			foreach (var hvs in hvses)
 				responce.Data.Add(new HVSViewModel(hvs)
 				{
-					Statistic = new StatisticViewModel(hvs?.Statistic)
+					User = new UserViewModel(hvs?.User)
 				});
 
 			return responce;
@@ -55,7 +55,7 @@ public class HVSService : IHVSService
 			var hvs = new HVS()
 			{
 				CurrentValue = viewModel.CurrentValue,
-				Statistic = await _statisticRepository.Get(viewModel.Statistic.Id)
+				User = await _userRepository.GetById(viewModel.User.Id)
 			};
 
 			responce.Data = await _hvsRepository.Create(hvs);
@@ -86,7 +86,7 @@ public class HVSService : IHVSService
 			}
 
 			hvs.CurrentValue = viewModel.CurrentValue;
-			hvs.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
+			hvs.User = await _userRepository.GetById(viewModel.User.Id);
 
 			await _hvsRepository.Update(hvs);
 			responce.Data = viewModel;
@@ -117,7 +117,7 @@ public class HVSService : IHVSService
 
 			responce.Data = new HVSViewModel(hvs)
 			{
-				Statistic = new StatisticViewModel(hvs?.Statistic)
+				User = new UserViewModel(hvs?.User)
 			};
 
 			return responce;

@@ -7,6 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="EntityTypeConfigurations\EnergyMeterConfiguration.cs" />
+    <Compile Remove="EntityTypeConfigurations\StatisticConfiguration.cs" />
+    <Compile Remove="Repositories\EnergyMeterRepository.cs" />
+    <Compile Remove="Repositories\StatisticRepository.cs" />
+    <Compile Remove="Services\Implementations\EnergyMeterService.cs" />
+    <Compile Remove="Services\Implementations\StatisticService.cs" />
+    <Compile Remove="Services\Interfaces\IEnergyMeterService.cs" />
+    <Compile Remove="Services\Interfaces\IStatisticService.cs" />
+    <Compile Remove="ViewModels\EnergyMeterViewModel.cs" />
+    <Compile Remove="ViewModels\StatisticViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.8">

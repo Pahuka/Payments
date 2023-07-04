@@ -12,9 +12,13 @@ public class EnergyViewModel : ViewModelBase
 	public EnergyViewModel(Energy energy)
 	{
 		Id = energy.Id;
-		CurrentValue = energy.CurrentValue;
+		NormativValue = energy.NormativValue;
+		DayValue = energy.DayValue;
+		NightValue = energy.NightValue;
 	}
 
-	public double CurrentValue { get; set; }
-	public StatisticViewModel? Statistic { get; set; }
+	public double NormativValue { get; set; }
+	public double DayValue { get; set; }
+	public double NightValue { get; set; }
+	public UserViewModel? User { get; set; }
 }

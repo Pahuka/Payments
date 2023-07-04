@@ -15,5 +15,5 @@ public class GVSViewModel : ViewModelBase
 	}
 
 	public double CurrentValue { get; set; }
-	public StatisticViewModel? Statistic { get; set; }
+	public UserViewModel? User { get; set; }
 }

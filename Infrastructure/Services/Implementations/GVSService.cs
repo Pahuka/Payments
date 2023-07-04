@@ -9,12 +9,12 @@ namespace Infrastructure.Services.Implementations;
 public class GVSService : IGVSService
 {
 	private readonly IGVSRepository _gvsRepository;
-	private readonly IStatisticRepository _statisticRepository;
+	private readonly IUserRepository _userRepository;
 
-	public GVSService(IGVSRepository gvsRepository, IStatisticRepository statisticRepository)
+	public GVSService(IGVSRepository gvsRepository, IUserRepository userRepository)
 	{
 		_gvsRepository = gvsRepository;
-		_statisticRepository = statisticRepository;
+		_userRepository = userRepository;
 	}
 
 	public async Task<IResponce<IList<GVSViewModel>>> GetAll()
@@ -33,7 +33,7 @@ public class GVSService : IGVSService
 			foreach (var gvs in gvses)
 				responce.Data.Add(new GVSViewModel(gvs)
 				{
-					Statistic = new StatisticViewModel(gvs?.Statistic)
+					User = new UserViewModel(gvs?.User)
 				});
 
 			return responce;
@@ -55,7 +55,7 @@ public class GVSService : IGVSService
 			var gvs = new GVS
 			{
 				CurrentValue = viewModel.CurrentValue,
-				Statistic = await _statisticRepository.Get(viewModel.Statistic.Id)
+				User = await _userRepository.GetById(viewModel.User.Id)
 			};
 
 			responce.Data = await _gvsRepository.Create(gvs);
@@ -86,7 +86,7 @@ public class GVSService : IGVSService
 			}
 
 			gvs.CurrentValue = viewModel.CurrentValue;
-			gvs.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
+			gvs.User = await _userRepository.GetById(viewModel.User.Id);
 
 			await _gvsRepository.Update(gvs);
 			responce.Data = viewModel;
@@ -117,7 +117,7 @@ public class GVSService : IGVSService
 
 			responce.Data = new GVSViewModel(gvs)
 			{
-				Statistic = new StatisticViewModel(gvs?.Statistic)
+				User = new UserViewModel(gvs?.User)
 			};
 
 			return responce;

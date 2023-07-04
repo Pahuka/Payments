@@ -9,12 +9,12 @@ namespace Infrastructure.Services.Implementations;
 public class EnergyService : IEnergyService
 {
 	private readonly IEnergyRepository _energyRepository;
-	private readonly IStatisticRepository _statisticRepository;
+	private readonly IUserRepository _userRepository;
 
-	public EnergyService(IEnergyRepository energyRepository, IStatisticRepository statisticRepository)
+	public EnergyService(IEnergyRepository energyRepository, IUserRepository userRepository)
 	{
 		_energyRepository = energyRepository;
-		_statisticRepository = statisticRepository;
+		_userRepository = userRepository;
 	}
 
 	public async Task<IResponce<IList<EnergyViewModel>>> GetAll()
@@ -33,7 +33,7 @@ public class EnergyService : IEnergyService
 			foreach (var energy in energies)
 				responce.Data.Add(new EnergyViewModel(energy)
 				{
-					Statistic = new StatisticViewModel(energy?.Statistic)
+					User = new UserViewModel(energy?.User)
 				});
 
 			return responce;
@@ -54,8 +54,10 @@ public class EnergyService : IEnergyService
 		{
 			var energy = new Energy()
 			{
-				CurrentValue = viewModel.CurrentValue,
-				Statistic = await _statisticRepository.Get(viewModel.Statistic.Id)
+				NormativValue = viewModel.NormativValue,
+				DayValue = viewModel.DayValue,
+				NightValue = viewModel.NightValue,
+				User = await _userRepository.GetById(viewModel.User.Id)
 			};
 
 			responce.Data = await _energyRepository.Create(energy);
@@ -85,8 +87,10 @@ public class EnergyService : IEnergyService
 				return responce;
 			}
 
-			energy.CurrentValue = viewModel.CurrentValue;
-			energy.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
+			energy.NightValue = viewModel.NormativValue;
+			energy.DayValue = viewModel.DayValue;
+			energy.NightValue = viewModel.NightValue;
+			energy.User = await _userRepository.GetById(viewModel.User.Id);
 
 			await _energyRepository.Update(energy);
 			responce.Data = viewModel;
@@ -117,7 +121,7 @@ public class EnergyService : IEnergyService
 
 			responce.Data = new EnergyViewModel(energy)
 			{
-				Statistic = new StatisticViewModel(energy?.Statistic)
+				User = new UserViewModel(energy?.User)
 			};
 
 			return responce;

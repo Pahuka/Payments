@@ -26,32 +26,23 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("CurrentValue")
+                    b.Property<double>("DayValue")
                         .HasColumnType("REAL");
 
+                    b.Property<double>("NightValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("NormativValue")
+                        .HasColumnType("REAL");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Energy");
-                });
-
-            modelBuilder.Entity("Domain.Entities.EnergyMeter", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("CurrentValueDay")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("CurrentValueNight")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EnergyMeter");
                 });
 
             modelBuilder.Entity("Domain.Entities.GVS", b =>
@@ -66,7 +57,12 @@ namespace Infrastructure.Migrations
                     b.Property<double>("CurrentValue")
                         .HasColumnType("REAL");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("GVS");
                 });
@@ -83,52 +79,14 @@ namespace Infrastructure.Migrations
                     b.Property<double>("CurrentValue")
                         .HasColumnType("REAL");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("HVS");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Statistic", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("EnergyId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("EnergyMeterId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("GVSId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("HVSId")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EnergyId")
-                        .IsUnique();
-
-                    b.HasIndex("EnergyMeterId")
-                        .IsUnique();
-
-                    b.HasIndex("GVSId")
-                        .IsUnique();
-
-                    b.HasIndex("HVSId")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("Statistics");
+                    b.ToTable("HVS");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -170,72 +128,46 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Statistic", b =>
+            modelBuilder.Entity("Domain.Entities.Energy", b =>
                 {
-                    b.HasOne("Domain.Entities.Energy", "Energy")
-                        .WithOne("Statistic")
-                        .HasForeignKey("Domain.Entities.Statistic", "EnergyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.EnergyMeter", "EnergyMeter")
-                        .WithOne("Statistic")
-                        .HasForeignKey("Domain.Entities.Statistic", "EnergyMeterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.GVS", "GVS")
-                        .WithOne("Statistic")
-                        .HasForeignKey("Domain.Entities.Statistic", "GVSId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.HVS", "HVS")
-                        .WithOne("Statistic")
-                        .HasForeignKey("Domain.Entities.Statistic", "HVSId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("Statistic")
+                        .WithMany("EnergyStatistic")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Energy");
-
-                    b.Navigation("EnergyMeter");
-
-                    b.Navigation("GVS");
-
-                    b.Navigation("HVS");
-
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Energy", b =>
-                {
-                    b.Navigation("Statistic");
-                });
-
-            modelBuilder.Entity("Domain.Entities.EnergyMeter", b =>
-                {
-                    b.Navigation("Statistic");
                 });
 
             modelBuilder.Entity("Domain.Entities.GVS", b =>
                 {
-                    b.Navigation("Statistic");
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("GVSStatistic")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.HVS", b =>
                 {
-                    b.Navigation("Statistic");
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("HVSStatistic")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Navigation("Statistic");
+                    b.Navigation("EnergyStatistic");
+
+                    b.Navigation("GVSStatistic");
+
+                    b.Navigation("HVSStatistic");
                 });
 #pragma warning restore 612, 618
         }

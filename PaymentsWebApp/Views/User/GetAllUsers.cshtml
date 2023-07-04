@@ -24,13 +24,13 @@
 					<td>@user.HasEnergyMeter</td>
 					<td>@user.HasGvsMeter</td>
 					<td>@user.HasHvsMeter</td>
-					<td>@if (@user.Statistic != null)
+					@*<td>@if (@user.Statistic != null)
 					    {
 							foreach (var statistic in @user.Statistic)
 						    {
 								<p>@statistic.Id</p>
 						    }
-					    }</td>
+					    }</td>*@
 					@*<td>
 				<div class="m-1">
 				<form asp-controller="User" asp-action="EditUser" method="get">

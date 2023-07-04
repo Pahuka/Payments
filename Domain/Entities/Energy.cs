@@ -4,6 +4,9 @@ namespace Domain.Entities;
 
 public class Energy : EntityBase
 {
-	public double CurrentValue { get; set; }
-	public Statistic? Statistic { get; set; }
+	public double NormativValue { get; set; }
+	public double DayValue { get; set; }
+	public double NightValue { get; set; }
+	public User? User { get; set; }
+	public Guid UserId { get; set; }
 }

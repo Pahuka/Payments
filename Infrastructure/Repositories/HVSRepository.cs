@@ -22,7 +22,7 @@ public class HVSRepository : IHVSRepository
 	public async Task<IQueryable<HVS>> GetAll()
 	{
 		return _appDbContext.HVS.AsQueryable()
-			.Include(x => x.Statistic);
+			.Include(x => x.User);
 	}
 
 	public async Task<bool> DeleteAsync(HVS entity)
@@ -42,7 +42,7 @@ public class HVSRepository : IHVSRepository
 	public async Task<HVS> Get(Guid Id)
 	{
 		return await _appDbContext.HVS
-			.Include(x => x.Statistic)
+			.Include(x => x.User)
 			.FirstOrDefaultAsync(x => x.Id.Equals(Id));
 	}
 }
