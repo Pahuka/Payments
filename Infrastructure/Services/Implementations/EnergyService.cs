@@ -33,7 +33,7 @@ public class EnergyService : IEnergyService
 			foreach (var energy in energies)
 				responce.Data.Add(new EnergyViewModel(energy)
 				{
-					User = new UserViewModel(energy?.User)
+					User = new UserViewModel(energy.User)
 				});
 
 			return responce;
@@ -57,11 +57,10 @@ public class EnergyService : IEnergyService
 				NormativValue = viewModel.NormativValue,
 				DayValue = viewModel.DayValue,
 				NightValue = viewModel.NightValue,
-				User = await _userRepository.GetById(viewModel.User.Id)
+				UserId = viewModel.UserId
 			};
 
 			responce.Data = await _energyRepository.Create(energy);
-
 			return responce;
 		}
 		catch (Exception e)
@@ -90,7 +89,6 @@ public class EnergyService : IEnergyService
 			energy.NightValue = viewModel.NormativValue;
 			energy.DayValue = viewModel.DayValue;
 			energy.NightValue = viewModel.NightValue;
-			energy.User = await _userRepository.GetById(viewModel.User.Id);
 
 			await _energyRepository.Update(energy);
 			responce.Data = viewModel;
@@ -121,7 +119,7 @@ public class EnergyService : IEnergyService
 
 			responce.Data = new EnergyViewModel(energy)
 			{
-				User = new UserViewModel(energy?.User)
+				User = new UserViewModel(energy.User)
 			};
 
 			return responce;

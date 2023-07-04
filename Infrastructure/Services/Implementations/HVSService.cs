@@ -33,7 +33,7 @@ public class HVSService : IHVSService
 			foreach (var hvs in hvses)
 				responce.Data.Add(new HVSViewModel(hvs)
 				{
-					User = new UserViewModel(hvs?.User)
+					User = new UserViewModel(hvs.User)
 				});
 
 			return responce;
@@ -55,7 +55,7 @@ public class HVSService : IHVSService
 			var hvs = new HVS()
 			{
 				CurrentValue = viewModel.CurrentValue,
-				User = await _userRepository.GetById(viewModel.User.Id)
+				UserId = viewModel.UserId
 			};
 
 			responce.Data = await _hvsRepository.Create(hvs);
@@ -86,7 +86,6 @@ public class HVSService : IHVSService
 			}
 
 			hvs.CurrentValue = viewModel.CurrentValue;
-			hvs.User = await _userRepository.GetById(viewModel.User.Id);
 
 			await _hvsRepository.Update(hvs);
 			responce.Data = viewModel;
@@ -117,7 +116,7 @@ public class HVSService : IHVSService
 
 			responce.Data = new HVSViewModel(hvs)
 			{
-				User = new UserViewModel(hvs?.User)
+				User = new UserViewModel(hvs.User)
 			};
 
 			return responce;

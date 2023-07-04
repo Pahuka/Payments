@@ -4,34 +4,41 @@
 	<h3 class="mb-0 text-center ParagraphHome">Все пользователи</h3>
 	<table class="table table-striped shadow p-3 mb-5 bg-light rounded">
 		<thead>
-			<tr>
-				<th>Имя</th>
-				<th>Фамилия</th>
-				<th>Логин</th>
-				<th>Прибор учета электроэнергии</th>
-				<th>Прибор учета горячей воды</th>
-				<th>Прибор учета холодной воды</th>
-				<th>Статистика</th>
-			</tr>
+		<tr>
+			<th>Имя</th>
+			<th>Фамилия</th>
+			<th>Логин</th>
+			<th>Прибор учета электроэнергии</th>
+			<th>Прибор учета горячей воды</th>
+			<th>Прибор учета холодной воды</th>
+			<th>Статистика</th>
+		</tr>
 		</thead>
 		<tbody>
-			@foreach (var user in Model)
-			{
-				<tr>
-					<th scope="row">@user.FirstName</th>
-					<td>@user.LastName</td>
-					<td>@user.Login</td>
-					<td>@user.HasEnergyMeter</td>
-					<td>@user.HasGvsMeter</td>
-					<td>@user.HasHvsMeter</td>
-					@*<td>@if (@user.Statistic != null)
-					    {
-							foreach (var statistic in @user.Statistic)
-						    {
-								<p>@statistic.Id</p>
-						    }
-					    }</td>*@
-					@*<td>
+		@foreach (var user in Model)
+		{
+			<tr>
+				<th scope="row">@user.FirstName</th>
+				<td>@user.LastName</td>
+				<td>@user.Login</td>
+				<td>@user.HasEnergyMeter</td>
+				<td>@user.HasGvsMeter</td>
+				<td>@user.HasHvsMeter</td>
+				<td>
+					@if (user.EnergyStatistic != null)
+					{
+						foreach (var statistic in user.EnergyStatistic)
+						{
+							<div class="m-1">
+								<p>@statistic.Date</p>
+								<p>@statistic.DayValue</p>
+								<p>@statistic.NightValue</p>
+								<p>@statistic.NormativValue</p>
+							</div>
+						}
+					}
+				</td>
+				@*<td>
 				<div class="m-1">
 				<form asp-controller="User" asp-action="EditUser" method="get">
 				<input type="text" id="login" name="login" value="@user.Login" hidden="true"/>
@@ -43,11 +50,11 @@
 				</form>
 				</div>
 				</td>*@
-				</tr>
-			}
+			</tr>
+		}
 		</tbody>
 	</table>
 	<form asp-controller="User" asp-action="CreateUser" method="get">
-		<input type="submit" value="Добавить" class="btn btn-outline-dark" />
+		<input type="submit" value="Добавить" class="btn btn-outline-dark"/>
 	</form>
 </div>

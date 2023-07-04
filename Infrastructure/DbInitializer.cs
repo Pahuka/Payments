@@ -1,4 +1,6 @@
-﻿namespace Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Infrastructure;
 
 public class DbInitializer
 {

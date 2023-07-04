@@ -19,7 +19,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Energy", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
@@ -35,7 +35,8 @@ namespace Infrastructure.Migrations
                     b.Property<double>("NormativValue")
                         .HasColumnType("REAL");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -47,7 +48,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.GVS", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
@@ -57,7 +58,8 @@ namespace Infrastructure.Migrations
                     b.Property<double>("CurrentValue")
                         .HasColumnType("REAL");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -69,7 +71,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.HVS", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
@@ -79,7 +81,8 @@ namespace Infrastructure.Migrations
                     b.Property<double>("CurrentValue")
                         .HasColumnType("REAL");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -91,7 +94,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 

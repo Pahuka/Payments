@@ -56,6 +56,6 @@ public class UserRepository : IUserRepository
 			.Include(x => x.GVSStatistic)
 			.Include(x => x.EnergyStatistic)
 			.Include(x => x.HVSStatistic)
-			.FirstOrDefaultAsync(x => x.Login.Equals(id));
+			.FirstOrDefaultAsync(x => x.Id.Equals(id));
 	}
 }

@@ -33,7 +33,7 @@ public class GVSService : IGVSService
 			foreach (var gvs in gvses)
 				responce.Data.Add(new GVSViewModel(gvs)
 				{
-					User = new UserViewModel(gvs?.User)
+					User = new UserViewModel(gvs.User)
 				});
 
 			return responce;
@@ -55,7 +55,7 @@ public class GVSService : IGVSService
 			var gvs = new GVS
 			{
 				CurrentValue = viewModel.CurrentValue,
-				User = await _userRepository.GetById(viewModel.User.Id)
+				UserId = viewModel.UserId
 			};
 
 			responce.Data = await _gvsRepository.Create(gvs);
@@ -86,7 +86,6 @@ public class GVSService : IGVSService
 			}
 
 			gvs.CurrentValue = viewModel.CurrentValue;
-			gvs.User = await _userRepository.GetById(viewModel.User.Id);
 
 			await _gvsRepository.Update(gvs);
 			responce.Data = viewModel;
@@ -117,7 +116,7 @@ public class GVSService : IGVSService
 
 			responce.Data = new GVSViewModel(gvs)
 			{
-				User = new UserViewModel(gvs?.User)
+				User = new UserViewModel(gvs.User)
 			};
 
 			return responce;

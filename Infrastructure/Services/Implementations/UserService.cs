@@ -27,7 +27,7 @@ public class UserService : IUserService
 		var responce = new Responce<IList<UserViewModel>> { Data = new List<UserViewModel>() };
 		try
 		{
-			var users = _userRepository.GetAll().Result;
+			var users = await _userRepository.GetAll();
 
 			if (users.Count() == 0)
 			{
@@ -37,34 +37,18 @@ public class UserService : IUserService
 
 			foreach (var user in users)
 			{
-				responce.Data.Add(new UserViewModel(user));
+				var userVm = new UserViewModel(user);
 
-				if (user.EnergyStatistic != null)
-				{
-					var userVm = responce.Data.Last();
-					userVm.EnergyStatistic = new List<EnergyViewModel>();
+				foreach (var statistic in user.EnergyStatistic)
+					userVm.EnergyStatistic.Add(new EnergyViewModel(statistic) { User = userVm });
 
-					foreach (var statistic in user.EnergyStatistic)
-						responce.Data.Last().EnergyStatistic.Add(new EnergyViewModel(statistic) { User = userVm });
-				}
+				foreach (var statistic in user.GVSStatistic)
+					userVm.GVSStatistic.Add(new GVSViewModel(statistic) { User = userVm });
 
-				if (user.GVSStatistic != null)
-				{
-					var userVm = responce.Data.Last();
-					userVm.GVSStatistic = new List<GVSViewModel>();
+				foreach (var statistic in user.HVSStatistic)
+					userVm.HVSStatistic.Add(new HVSViewModel(statistic) { User = userVm });
 
-					foreach (var statistic in user.GVSStatistic)
-						responce.Data.Last().GVSStatistic.Add(new GVSViewModel(statistic) { User = userVm });
-				}
-
-				if (user.HVSStatistic != null)
-				{
-					var userVm = responce.Data.Last();
-					userVm.HVSStatistic = new List<HVSViewModel>();
-
-					foreach (var statistic in user.HVSStatistic)
-						responce.Data.Last().HVSStatistic.Add(new HVSViewModel(statistic) { User = userVm });
-				}
+				responce.Data.Add(userVm);
 			}
 
 			return responce;
@@ -94,9 +78,10 @@ public class UserService : IUserService
 				HasGvsMeter = viewModel.HasGvsMeter
 			};
 
-			user.EnergyStatistic = await ViewModelEnergyStatistic(viewModel?.EnergyStatistic, user);
-			user.HVSStatistic = await ViewModelHVSStatistic(viewModel?.HVSStatistic, user);
-			user.GVSStatistic = await ViewModelGVSStatistic(viewModel?.GVSStatistic, user);
+			//TODO: Скорее всего можно убрать
+			user.EnergyStatistic = await ViewModelEnergyStatistic(viewModel.EnergyStatistic);
+			user.HVSStatistic = await ViewModelHVSStatistic(viewModel.HVSStatistic);
+			user.GVSStatistic = await ViewModelGVSStatistic(viewModel.GVSStatistic);
 
 			responce.Data = await _userRepository.Create(user);
 
@@ -128,7 +113,7 @@ public class UserService : IUserService
 			responce.Data = new UserViewModel(user);
 			responce.Data.HVSStatistic =
 				user.HVSStatistic.Select(x => new HVSViewModel(x) { User = responce.Data }).ToList();
-			responce.Data.EnergyStatistic = 
+			responce.Data.EnergyStatistic =
 				user.EnergyStatistic.Select(x => new EnergyViewModel(x) { User = responce.Data }).ToList();
 			responce.Data.GVSStatistic =
 				user.GVSStatistic.Select(x => new GVSViewModel(x) { User = responce.Data }).ToList();
@@ -193,9 +178,11 @@ public class UserService : IUserService
 			user.LastName = viewModel.LastName;
 			user.Login = viewModel.Login;
 			user.Password = viewModel.Password;
-			user.EnergyStatistic = await ViewModelEnergyStatistic(viewModel.EnergyStatistic, user);
-			user.HVSStatistic = await ViewModelHVSStatistic(viewModel.HVSStatistic, user);
-			user.GVSStatistic = await ViewModelGVSStatistic(viewModel.GVSStatistic, user);
+
+			//TODO: Скорее всего можно убрать
+			user.EnergyStatistic = await ViewModelEnergyStatistic(viewModel.EnergyStatistic);
+			user.HVSStatistic = await ViewModelHVSStatistic(viewModel.HVSStatistic);
+			user.GVSStatistic = await ViewModelGVSStatistic(viewModel.GVSStatistic);
 
 			await _userRepository.Update(user);
 			responce.Data = viewModel;
@@ -236,7 +223,7 @@ public class UserService : IUserService
 		}
 	}
 
-	private async Task<IList<Energy>> ViewModelEnergyStatistic(IList<EnergyViewModel> viewModel, User user)
+	private async Task<IList<Energy>> ViewModelEnergyStatistic(IList<EnergyViewModel> viewModel)
 	{
 		if (viewModel == null)
 			return null;
@@ -250,7 +237,7 @@ public class UserService : IUserService
 				DayValue = energyView.DayValue,
 				NightValue = energyView.NightValue,
 				NormativValue = energyView.NormativValue,
-				User = user
+				UserId = energyView.UserId
 			};
 
 			await _energyRepository.Create(energy);
@@ -261,7 +248,7 @@ public class UserService : IUserService
 		return result;
 	}
 
-	private async Task<IList<GVS>> ViewModelGVSStatistic(IList<GVSViewModel> viewModel, User user)
+	private async Task<IList<GVS>> ViewModelGVSStatistic(IList<GVSViewModel> viewModel)
 	{
 		if (viewModel == null)
 			return null;
@@ -273,7 +260,7 @@ public class UserService : IUserService
 			var gvs = new GVS
 			{
 				CurrentValue = gvsViewModel.CurrentValue,
-				User = user
+				UserId = gvsViewModel.UserId
 			};
 
 			await _gvsRepository.Create(gvs);
@@ -284,7 +271,7 @@ public class UserService : IUserService
 		return result;
 	}
 
-	private async Task<IList<HVS>> ViewModelHVSStatistic(IList<HVSViewModel> viewModel, User user)
+	private async Task<IList<HVS>> ViewModelHVSStatistic(IList<HVSViewModel> viewModel)
 	{
 		if (viewModel == null)
 			return null;
@@ -296,7 +283,7 @@ public class UserService : IUserService
 			var hvs = new HVS
 			{
 				CurrentValue = hvsViewModel.CurrentValue,
-				User = user
+				UserId = hvsViewModel.UserId
 			};
 
 			await _hvsRepository.Create(hvs);

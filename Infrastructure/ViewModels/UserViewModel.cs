@@ -8,11 +8,14 @@ public class UserViewModel : ViewModelBase
 {
 	public UserViewModel()
 	{
-		
+		EnergyStatistic = new List<EnergyViewModel>();
+		GVSStatistic = new List<GVSViewModel>();
+		HVSStatistic = new List<HVSViewModel>();
 	}
 	public UserViewModel(User user)
 	{
 		Id = user.Id;
+		Date = user.CreatedDate;
 		FirstName = user.FirstName;
 		LastName = user.LastName;
 		Login = user.Login;
@@ -20,6 +23,9 @@ public class UserViewModel : ViewModelBase
 		HasEnergyMeter = user.HasEnergyMeter;
 		HasGvsMeter = user.HasGvsMeter;
 		HasHvsMeter = user.HasHvsMeter;
+		EnergyStatistic = new List<EnergyViewModel>();
+		GVSStatistic = new List<GVSViewModel>();
+		HVSStatistic = new List<HVSViewModel>();
 	}
 
 	public string FirstName { get; set; }
