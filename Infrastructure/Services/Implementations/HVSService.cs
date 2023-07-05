@@ -8,6 +8,8 @@ namespace Infrastructure.Services.Implementations;
 
 public class HVSService : IHVSService
 {
+	private readonly double _normativ = 4.85;
+	private readonly double _tarif = 35.78;
 	private readonly IHVSRepository _hvsRepository;
 	private readonly IUserRepository _userRepository;
 
@@ -58,7 +60,8 @@ public class HVSService : IHVSService
 				UserId = viewModel.UserId
 			};
 
-			responce.Data = await _hvsRepository.Create(hvs);
+			var user = await _userRepository.GetById(viewModel.UserId);
+			responce.Data = await _hvsRepository.Create(await GetStatisticResult(hvs, user));
 
 			return responce;
 		}
@@ -153,5 +156,24 @@ public class HVSService : IHVSService
 				Data = false
 			};
 		}
+	}
+
+	private async Task<HVS> GetStatisticResult(HVS currentHVS, User user)
+	{
+		var lastHVS = user.HVSStatistic.LastOrDefault();
+
+		if (lastHVS == null)
+			return currentHVS;
+
+		if (user.HasHvsMeter)
+		{
+			currentHVS.TotalResult += Math.Abs(currentHVS.CurrentValue - lastHVS.CurrentValue) * _tarif;
+		}
+		else
+		{
+			currentHVS.TotalResult += (user.PeopleCount * _normativ) * _tarif;
+		}
+
+		return currentHVS;
 	}
 }

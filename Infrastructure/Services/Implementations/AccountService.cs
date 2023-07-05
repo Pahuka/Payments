@@ -34,6 +34,7 @@ public class AccountService : IAccountService
 				FirstName = model.FirstName,
 				LastName = model.LastName,
 				Password = model.Password,
+				PeopleCount = model.PeopleCount,
 				HasEnergyMeter = model.HasEnergyMeter,
 				HasGvsMeter = model.HasGvsMeter,
 				HasHvsMeter = model.HasHvsMeter

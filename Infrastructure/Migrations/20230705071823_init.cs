@@ -60,7 +60,8 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     CurrentValue = table.Column<double>(type: "REAL", nullable: false),
-                    TotalResult = table.Column<double>(type: "REAL", nullable: false),
+                    TotalResultTN = table.Column<double>(type: "REAL", nullable: false),
+                    TotalResultTE = table.Column<double>(type: "REAL", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },

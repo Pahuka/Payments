@@ -66,7 +66,7 @@ public class EnergyService : IEnergyService
 
 			var user = await _userRepository.GetById(viewModel.UserId);
 
-			responce.Data = await _energyRepository.Create(await TakeStatisticResult(energy, user));
+			responce.Data = await _energyRepository.Create(await GetStatisticResult(energy, user));
 
 			return responce;
 		}
@@ -165,7 +165,7 @@ public class EnergyService : IEnergyService
 		}
 	}
 
-	private async Task<Energy> TakeStatisticResult(Energy currentEnergy, User user)
+	private async Task<Energy> GetStatisticResult(Energy currentEnergy, User user)
 	{
 		var lastEnergy = user.EnergyStatistic.LastOrDefault();
 
@@ -174,8 +174,8 @@ public class EnergyService : IEnergyService
 
 		if (user.HasEnergyMeter)
 		{
-			currentEnergy.TotalResult += (currentEnergy.DayValue - lastEnergy.DayValue) * _tarifDay;
-			currentEnergy.TotalResult += (currentEnergy.NightValue - lastEnergy.NightValue) * _tarifNight;
+			currentEnergy.TotalResult += Math.Abs(currentEnergy.DayValue - lastEnergy.DayValue) * _tarifDay;
+			currentEnergy.TotalResult += Math.Abs(currentEnergy.NightValue - lastEnergy.NightValue) * _tarifNight;
 		}
 		else
 		{

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230704202650_init")]
+    [Migration("20230705071823_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -64,7 +64,10 @@ namespace Infrastructure.Migrations
                     b.Property<double>("CurrentValue")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("TotalResult")
+                    b.Property<double>("TotalResultTE")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("TotalResultTN")
                         .HasColumnType("REAL");
 
                     b.Property<string>("UserId")

@@ -40,4 +40,9 @@ public class UserViewModel : ViewModelBase
 	public bool HasHvsMeter { get; set; }
 	public bool HasGvsMeter { get; set; }
 	public bool HasEnergyMeter { get; set; }
+
+	public double GetTotalResult(IEnumerable<double> statCount)
+	{
+		return Math.Round(statCount.Sum(), 2);
+	}
 }

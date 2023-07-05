@@ -61,7 +61,10 @@ namespace Infrastructure.Migrations
                     b.Property<double>("CurrentValue")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("TotalResult")
+                    b.Property<double>("TotalResultTE")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("TotalResultTN")
                         .HasColumnType("REAL");
 
                     b.Property<string>("UserId")

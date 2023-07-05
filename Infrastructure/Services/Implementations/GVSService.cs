@@ -8,6 +8,10 @@ namespace Infrastructure.Services.Implementations;
 
 public class GVSService : IGVSService
 {
+	private readonly double _normativTN = 4.01;
+	private readonly double _normativTE = 0.05349;
+	private readonly double _tarifTE = 998.69;
+	private readonly double _tarifTN = 35.78;
 	private readonly IGVSRepository _gvsRepository;
 	private readonly IUserRepository _userRepository;
 
@@ -58,7 +62,8 @@ public class GVSService : IGVSService
 				UserId = viewModel.UserId
 			};
 
-			responce.Data = await _gvsRepository.Create(gvs);
+			var user = await _userRepository.GetById(viewModel.UserId);
+			responce.Data = await _gvsRepository.Create(await GetStatisticResult(gvs, user));
 
 			return responce;
 		}
@@ -153,5 +158,31 @@ public class GVSService : IGVSService
 				Data = false
 			};
 		}
+	}
+
+	private async Task<GVS> GetStatisticResult(GVS currentGVS, User user)
+	{
+		var lastGVS = user.GVSStatistic.LastOrDefault();
+		var gvsTN = 0.0;
+
+		if (lastGVS == null)
+			return currentGVS;
+
+		if (user.HasGvsMeter)
+		{
+			gvsTN = Math.Abs(currentGVS.CurrentValue - lastGVS.CurrentValue);
+			
+			currentGVS.TotalResultTN += gvsTN * _tarifTN;
+			currentGVS.TotalResultTE += (gvsTN * _normativTE) * _tarifTE;
+		}
+		else
+		{
+			gvsTN = user.PeopleCount * _normativTN;
+
+			currentGVS.TotalResultTE += gvsTN * _tarifTE;
+			currentGVS.TotalResultTN += (gvsTN * _normativTE) * _tarifTE;
+		}
+
+		return currentGVS;
 	}
 }

@@ -73,6 +73,7 @@ public class UserService : IUserService
 				LastName = viewModel.LastName,
 				Login = viewModel.Login,
 				Password = viewModel.Password,
+				PeopleCount = viewModel.PeopleCount,
 				HasEnergyMeter = viewModel.HasEnergyMeter,
 				HasHvsMeter = viewModel.HasHvsMeter,
 				HasGvsMeter = viewModel.HasGvsMeter
@@ -178,6 +179,7 @@ public class UserService : IUserService
 			user.LastName = viewModel.LastName;
 			user.Login = viewModel.Login;
 			user.Password = viewModel.Password;
+			user.PeopleCount = viewModel.PeopleCount;
 
 			//TODO: Скорее всего можно убрать
 			user.EnergyStatistic = await ViewModelEnergyStatistic(viewModel.EnergyStatistic);

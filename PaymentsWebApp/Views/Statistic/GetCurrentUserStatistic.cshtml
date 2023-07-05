@@ -26,6 +26,10 @@
 		<label asp-for="HasEnergyMeter"></label>
 		<input class="form-control" type="text" placeholder="@Model.HasEnergyMeter.ToString()" readonly>
 	</div>
+	<div class="form-group">
+		<label asp-for="PeopleCount"></label>
+		<input class="form-control" type="text" placeholder="@Model.PeopleCount.ToString()" readonly>
+	</div>
 </div>
 
 <table class="table table-striped shadow p-3 mb-5 bg-light rounded">
@@ -33,15 +37,15 @@
 	<tr>
 		<th>Тип показаний</th>
 		<th>Статистика</th>
-		<th>Действие</th>
+		<th rowspan="3">Итого</th>
 	</tr>
 	</thead>
 	<tbody>
 
 	<tr>
 		<th scope="row">ГВС</th>
-		<td>ГВС Список</td>
 		<td>
+			<p>@Model.GetTotalResult(@Model.GVSStatistic.Select(x=> x.TotalResultTN))</p>
 			<div class="btn-group" role="group">
 				<form asp-controller="Statistic" asp-action="CreateEnergyStatistic" method="get">
 					<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
@@ -52,8 +56,8 @@
 	</tr>
 	<tr>
 		<th scope="row">ХВС</th>
-		<td>ХВС Список</td>
 		<td>
+			<p>@Model.GetTotalResult(@Model.HVSStatistic.Select(x=> x.TotalResult))</p>
 			<div class="btn-group" role="group">
 				<form asp-controller="Statistic" asp-action="CreateEnergyStatistic" method="get">
 					<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
@@ -64,8 +68,8 @@
 	</tr>
 	<tr>
 		<th scope="row">Электроэнергия</th>
-		<td>@Model.EnergyStatistic.Select(x=> x.TotalResult).Aggregate((x, y) => x + y)</td>
 		<td>
+			<p>@Model.GetTotalResult(@Model.EnergyStatistic.Select(x=> x.TotalResult))</p>
 			<div class="btn-group" role="group">
 				<form asp-controller="Statistic" asp-action="CreateEnergyStatistic" method="get">
 					<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
