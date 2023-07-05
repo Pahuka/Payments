@@ -4,6 +4,7 @@ using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace PaymentsWebApp.Controllers;
 
@@ -25,18 +26,27 @@ public class AccountController : Controller
 	[HttpPost]
 	public async Task<IActionResult> Register(UserViewModel model)
 	{
-		//if (ModelState.IsValid)
+		if (ModelState["FirstName"].ValidationState == ModelValidationState.Valid &&
+		    ModelState["LastName"].ValidationState == ModelValidationState.Valid &&
+		    ModelState["Login"].ValidationState == ModelValidationState.Valid &&
+		    ModelState["Password"].ValidationState == ModelValidationState.Valid &&
+		    ModelState["PeopleCount"].ValidationState == ModelValidationState.Valid)
 		{
-			var response = await _accountService.Register(model);
-			if (response.Data.IsAuthenticated)
-			{
-				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-					new ClaimsPrincipal(response.Data));
+			var responce = await _accountService.Register(model);
 
-				return RedirectToAction("Index", "Home");
+			if (responce.Data == null)
+			{
+				TempData["Message"] = responce.Description;
+				return RedirectToAction("Error");
 			}
 
-			ModelState.AddModelError("", response.Description);
+			if (responce.Data.IsAuthenticated)
+			{
+				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+					new ClaimsPrincipal(responce.Data));
+
+				return RedirectToAction("GetCurrentUserStatistic", "Statistic");
+			}
 		}
 
 		return View(model);
@@ -51,7 +61,8 @@ public class AccountController : Controller
 	[HttpPost]
 	public async Task<IActionResult> Login(UserViewModel model)
 	{
-		//if (ModelState.IsValid)
+		if (ModelState["Login"].ValidationState == ModelValidationState.Valid &&
+		    ModelState["Password"].ValidationState == ModelValidationState.Valid)
 		{
 			var response = await _accountService.Login(model);
 			if (response.Data.IsAuthenticated)
@@ -59,10 +70,8 @@ public class AccountController : Controller
 				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
 					new ClaimsPrincipal(response.Data));
 
-				return RedirectToAction("Index", "Home");
+				return RedirectToAction("GetCurrentUserStatistic", "Statistic");
 			}
-
-			ModelState.AddModelError("", response.Description);
 		}
 
 		return View(model);
@@ -78,15 +87,20 @@ public class AccountController : Controller
 	[HttpPost]
 	public async Task<IActionResult> ChangePassword(UserViewModel model)
 	{
-		//if (ModelState.IsValid)
+		if (ModelState.IsValid)
 		{
 			var response = await _accountService.ChangePassword(model);
-			//if (response.StatusCode == Domain.Enum.StatusCode.OK)
 			return Json(new { description = response.Description });
 		}
 
 		var modelError = ModelState.Values.SelectMany(v => v.Errors);
 
 		return StatusCode(StatusCodes.Status500InternalServerError, new { modelError.FirstOrDefault().ErrorMessage });
+	}
+
+	public IActionResult Error()
+	{
+		ViewBag.Message = TempData["Message"];
+		return View();
 	}
 }

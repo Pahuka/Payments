@@ -11,39 +11,54 @@
 				<div class="col-md-10">
 					<span class="anchor"></span>
 					<h3 class="mb-0 text-center paragraphHome text-black">Регистрация</h3>
+					<p></p>
 					<form asp-controller="Account" asp-action="Register">
-						<div asp-validation-summary="None" style="font-size:23px; font-family:Impact" class="text-danger text-center"></div>
+						<div asp-validation-summary="ModelOnly" style="font-size:23px; font-family:Impact" class="text-danger text-center"></div>
 						<div class="form-group">
 							<input asp-for="FirstName" class="form-control textbox-dg font-weight-bold text-center" placeholder="Имя" type="text">
+							<span class="text-black" style="font-size: small; font-family:'Comic Sans MS'">Минимум 3 символа</span>
+							<span asp-validation-for="FirstName" class="text-danger text-center"></span>
 						</div>
 						<div class="form-group">
+							<p></p>
 							<input asp-for="LastName" class="form-control textbox-dg font-weight-bold text-center" placeholder="Фамилия" type="text">
+							<span class="text-black" style="font-size: small; font-family:'Comic Sans MS'">Минимум 3 символа</span>
+							<span asp-validation-for="LastName" class="text-danger text-center"></span>
 						</div>
 						<div class="form-group">
+							<p></p>
 							<input asp-for="Login" class="form-control textbox-dg font-weight-bold text-center" placeholder="Логин" type="text">
+							<span class="text-black" style="font-size: small; font-family:'Comic Sans MS'">Минимум 3 символа</span>
+							<span asp-validation-for="Login" class="text-danger text-center"></span>
 						</div>
 						<div class="form-group">
+							<p></p>
 							<input autocomplete="new-password" asp-for="Password" placeholder="Пароль" class="form-control textbox-dg font-weight-bold text-center" type="password">
+							<span class="text-black" style="font-size: small; font-family:'Comic Sans MS'">Пароль должен быть длиной больше 6 символов</span>
+							<span asp-validation-for="Password" class="text-danger text-center"></span>
 						</div>
 						<div class="form-group">
+							<p></p>
 							<input asp-for="PeopleCount" placeholder="Количество прописанных людей в помещении" class="form-control textbox-dg font-weight-bold text-center" type="number">
+							<span class="text-black" style="font-size: small; font-family:'Comic Sans MS'">Минимум 1</span>
+							<span asp-validation-for="PeopleCount" class="text-danger text-center"></span>
 						</div>
-						<span class="text-black" style="font-size: small; font-family:'Comic Sans MS'">Пароль должен быть длиной больше 6 символов и иметь только латинские символы</span>
 						<div class="form-group">
+							<p></p>
 							<label asp-for="HasGvsMeter"></label>
 							@Html.CheckBoxFor(m => m.HasGvsMeter)
 						</div>
 						<div class="form-group">
+							<p></p>
 							<label asp-for="HasHvsMeter"></label>
 							@Html.CheckBoxFor(m => m.HasHvsMeter)
 						</div>
 						<div class="form-group">
+							<p></p>
 							<label asp-for="HasEnergyMeter"></label>
 							@Html.CheckBoxFor(m => m.HasEnergyMeter)
 						</div>
-						@*<div class="form-group">
-							<input autocomplete="new-password" asp-for="Password" placeholder="Подтвердите пароль" class="form-control textbox-dg font-weight-bold text-center" type="password">
-						</div>*@
+						<p></p>
 						<button class="btn btn-outline-dark m-1" type="submit">Зарегистрироваться</button>
 					</form>
 				</div>

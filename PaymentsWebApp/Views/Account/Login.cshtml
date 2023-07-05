@@ -11,16 +11,20 @@
 				<div class="col-md-10">
 					<span class="anchor"></span>
 					<h3 class="mb-0 text-center ParagraphHome">Вход в аккаунт</h3>
+					<p></p>
 					<form autocomplete="on" method="post" asp-controller="Account" asp-action="Login">
-						<div asp-validation-summary="None" style="font-size:23px; font-family:Impact" class="text-danger text-center"></div>
+						<div asp-validation-summary="ModelOnly" style="font-size:23px; font-family:Impact" class="text-danger text-center"></div>
 						<div class="form-group">
 							<input asp-for="Login" placeholder="Логин" class="form-control textbox-dg font-weight-bold text-center" type="text">
-							<div class="form-text">Длина логина должна быть от 3 до 20 символов.</div>
+							<span asp-validation-for="Login" class="text-danger text-center"></span>
 						</div>
+						<p></p>
 						<div class="form-group">
 							<input autocomplete="new-password" asp-for="Password" placeholder="Пароль" class="form-control textbox-dg font-weight-bold text-center" type="password">
+							<span asp-validation-for="Password" class="text-danger text-center"></span>
 						</div>
 						<div>
+							<p></p>
 							<button class="btn btn-outline-dark m-1">Войти</button>
 						</div>
 					</form>

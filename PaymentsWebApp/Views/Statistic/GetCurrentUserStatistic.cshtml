@@ -37,16 +37,14 @@
 	<tr>
 		<th>Тип показаний</th>
 		<th>Статистика</th>
-		<th rowspan="3">Итого</th>
 	</tr>
 	</thead>
 	<tbody>
-
 	<tr>
 		<th scope="row">ГВС</th>
 		<td>
-			<p>Тплоноситель: @Model.GetTotalResult(Model.GVSStatistic.Select(x => x.TotalResultTN))</p>
-			<p>Тепловая энергия: @Model.GetTotalResult(Model.GVSStatistic.Select(x => x.TotalResultTE))</p>
+			<p>Теплоноситель: @Model.GetCurrentTotal(Model.GVSStatistic.Select(x => x.TotalResultTN))</p>
+			<p>Тепловая энергия: @Model.GetCurrentTotal(Model.GVSStatistic.Select(x => x.TotalResultTE))</p>
 			<div class="btn-group" role="group">
 				<form asp-controller="Statistic" asp-action="CreateGVSStatistic" method="get">
 					<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
@@ -58,7 +56,7 @@
 	<tr>
 		<th scope="row">ХВС</th>
 		<td>
-			<p>@Model.GetTotalResult(Model.HVSStatistic.Select(x => x.TotalResult))</p>
+			<p>@Model.GetCurrentTotal(Model.HVSStatistic.Select(x => x.TotalResult))</p>
 			<div class="btn-group" role="group">
 				<form asp-controller="Statistic" asp-action="CreateHVSStatistic" method="get">
 					<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
@@ -70,7 +68,7 @@
 	<tr>
 		<th scope="row">Электроэнергия</th>
 		<td>
-			<p>@Model.GetTotalResult(Model.EnergyStatistic.Select(x => x.TotalResult))</p>
+			<p>@Model.GetCurrentTotal(Model.EnergyStatistic.Select(x => x.TotalResult))</p>
 			<div class="btn-group" role="group">
 				<form asp-controller="Statistic" asp-action="CreateEnergyStatistic" method="get">
 					<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
@@ -79,6 +77,10 @@
 			</div>
 		</td>
 	</tr>
-
 	</tbody>
 </table>
+
+<div class="form-group">
+	<label style="font-size:23px; font-family:Impact, serif">Итого</label>
+	<input style="font-size:23px; font-family:Impact, serif" class="form-control" type="text" placeholder="@Model.GetAllTotal()" readonly>
+</div>

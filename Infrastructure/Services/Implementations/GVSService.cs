@@ -162,7 +162,7 @@ public class GVSService : IGVSService
 
 	private async Task<GVS> GetStatisticResult(GVS currentGVS, User user)
 	{
-		var lastGVS = user.GVSStatistic.LastOrDefault();
+		var lastGVS = user.GVSStatistic.OrderBy(x => x.CreatedDate).LastOrDefault();
 		var gvsTN = 0.0;
 
 		if (lastGVS == null)
@@ -170,18 +170,23 @@ public class GVSService : IGVSService
 
 		if (user.HasGvsMeter)
 		{
-			gvsTN = Math.Abs(currentGVS.CurrentValue - lastGVS.CurrentValue);
+			gvsTN = currentGVS.CurrentValue - lastGVS.CurrentValue;
 
-			currentGVS.TotalResultTN += gvsTN * _tarifTN;
-			currentGVS.TotalResultTE += gvsTN * _normativTE * _tarifTE;
+			if (gvsTN <= 0)
+				return currentGVS;
+
+			lastGVS.TotalResultTN += gvsTN * _tarifTN;
+			lastGVS.TotalResultTE += gvsTN * _normativTE * _tarifTE;
 		}
 		else
 		{
 			gvsTN = user.PeopleCount * _normativTN;
 
-			currentGVS.TotalResultTE += gvsTN * _tarifTE;
-			currentGVS.TotalResultTN += gvsTN * _normativTE * _tarifTE;
+			lastGVS.TotalResultTE += gvsTN * _tarifTE;
+			lastGVS.TotalResultTN += gvsTN * _normativTE * _tarifTE;
 		}
+
+		await _gvsRepository.Update(lastGVS);
 
 		return currentGVS;
 	}

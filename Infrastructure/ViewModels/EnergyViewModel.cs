@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using Domain.Entities;
 
 namespace Infrastructure.ViewModels;
 
@@ -18,8 +20,14 @@ public class EnergyViewModel : ViewModelBase
 		TotalResult = energy.TotalResult;
 	}
 
+	[DisplayName("Дневные показания")]
+	[Required(ErrorMessage = "Значение не должно быть пустым")]
 	public double DayValue { get; set; }
+
+	[DisplayName("Ночные показания")]
+	[Required(ErrorMessage = "Значение не должно быть пустым")]
 	public double NightValue { get; set; }
+
 	public double TotalResult { get; set; }
 	public UserViewModel? User { get; set; }
 	public Guid UserId { get; set; }

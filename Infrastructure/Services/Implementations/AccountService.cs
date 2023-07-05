@@ -10,11 +10,19 @@ namespace Infrastructure.Services.Implementations;
 
 public class AccountService : IAccountService
 {
+	private readonly IEnergyRepository _energyRepository;
+	private readonly IGVSRepository _gvsRepository;
+	private readonly IHVSRepository _hvsRepository;
 	private readonly IUserRepository _userRepository;
 
-	public AccountService(IUserRepository userRepository)
+	public AccountService(IUserRepository userRepository, IEnergyRepository energyRepository,
+		IGVSRepository gvsRepository,
+		IHVSRepository hvsRepository)
 	{
 		_userRepository = userRepository;
+		_energyRepository = energyRepository;
+		_gvsRepository = gvsRepository;
+		_hvsRepository = hvsRepository;
 	}
 
 	public async Task<Responce<ClaimsIdentity>> Register(UserViewModel model)
@@ -41,6 +49,9 @@ public class AccountService : IAccountService
 			};
 
 			await _userRepository.Create(user);
+			await _energyRepository.Create(new Energy { UserId = user.Id });
+			await _gvsRepository.Create(new GVS { UserId = user.Id });
+			await _hvsRepository.Create(new HVS { UserId = user.Id });
 
 			var result = Authenticate(user);
 

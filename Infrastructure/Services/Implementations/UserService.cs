@@ -79,12 +79,11 @@ public class UserService : IUserService
 				HasGvsMeter = viewModel.HasGvsMeter
 			};
 
-			//TODO: Скорее всего можно убрать
-			user.EnergyStatistic = await ViewModelEnergyStatistic(viewModel.EnergyStatistic);
-			user.HVSStatistic = await ViewModelHVSStatistic(viewModel.HVSStatistic);
-			user.GVSStatistic = await ViewModelGVSStatistic(viewModel.GVSStatistic);
-
 			responce.Data = await _userRepository.Create(user);
+
+			await _energyRepository.Create(new Energy { UserId = user.Id });
+			await _gvsRepository.Create(new GVS { UserId = user.Id });
+			await _hvsRepository.Create(new HVS { UserId = user.Id });
 
 			return responce;
 		}

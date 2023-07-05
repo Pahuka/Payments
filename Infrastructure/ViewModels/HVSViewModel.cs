@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using Domain.Entities;
 
 namespace Infrastructure.ViewModels;
 
@@ -17,7 +19,10 @@ public class HVSViewModel : ViewModelBase
 		UserId = hvs.UserId;
 	}
 
+	[DisplayName("Текущие показания")]
+	[Required(ErrorMessage = "Значение не должно быть пустым")]
 	public double CurrentValue { get; set; }
+
 	public double TotalResult { get; set; }
 	public UserViewModel? User { get; set; }
 	public Guid UserId { get; set; }

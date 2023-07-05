@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace PaymentsWebApp.Controllers;
 
@@ -47,12 +48,17 @@ public class StatisticController : Controller
 	[HttpPost]
 	public async Task<IActionResult> CreateGVSStatistic(GVSViewModel gvsViewModel)
 	{
-		var responce = await _gvsService.Create(gvsViewModel);
-		if (responce.Data)
-			return RedirectToAction("GetAllHVSStatistic");
+		if (ModelState["CurrentValue"].ValidationState == ModelValidationState.Valid)
+		{
+			var responce = await _gvsService.Create(gvsViewModel);
+			if (responce.Data)
+				return RedirectToAction("GetAllHVSStatistic");
 
-		TempData["Message"] = responce.Description;
-		return RedirectToAction("Error");
+			TempData["Message"] = responce.Description;
+			return RedirectToAction("Error");
+		}
+
+		return View(gvsViewModel);
 	}
 
 	[HttpGet]
@@ -81,12 +87,17 @@ public class StatisticController : Controller
 	[HttpPost]
 	public async Task<IActionResult> CreateHVSStatistic(HVSViewModel hvsViewModel)
 	{
-		var responce = await _hvsService.Create(hvsViewModel);
-		if (responce.Data)
-			return RedirectToAction("GetAllHVSStatistic");
+		if (ModelState["CurrentValue"].ValidationState == ModelValidationState.Valid)
+		{
+			var responce = await _hvsService.Create(hvsViewModel);
+			if (responce.Data)
+				return RedirectToAction("GetAllHVSStatistic");
 
-		TempData["Message"] = responce.Description;
-		return RedirectToAction("Error");
+			TempData["Message"] = responce.Description;
+			return RedirectToAction("Error");
+		}
+
+		return View(hvsViewModel);
 	}
 
 	[HttpGet]
@@ -115,12 +126,18 @@ public class StatisticController : Controller
 	[HttpPost]
 	public async Task<IActionResult> CreateEnergyStatistic(EnergyViewModel energyViewModel)
 	{
-		var responce = await _energyService.Create(energyViewModel);
-		if (responce.Data)
-			return RedirectToAction("GetCurrentUserStatistic");
+		if (ModelState["DayValue"].ValidationState == ModelValidationState.Valid &&
+		    ModelState["NightValue"].ValidationState == ModelValidationState.Valid)
+		{
+			var responce = await _energyService.Create(energyViewModel);
+			if (responce.Data)
+				return RedirectToAction("GetCurrentUserStatistic");
 
-		TempData["Message"] = responce.Description;
-		return RedirectToAction("Error");
+			TempData["Message"] = responce.Description;
+			return RedirectToAction("Error");
+		}
+
+		return View(energyViewModel);
 	}
 
 	[HttpGet]

@@ -4,16 +4,19 @@
 	<h3 class="mb-0 text-center ParagraphHome">Показания потребления электроэнергии</h3>
 	<form asp-action="CreateEnergyStatistic" enctype="multipart/form-data">
 		<input asp-for="UserId" hidden/>
-		<div asp-validation-summary="None" style="font-size:23px; font-family:Impact, serif" class="text-danger text-center"></div>
+		<input asp-for="User.HasEnergyMeter" hidden/>
+		<div asp-validation-summary="ModelOnly" style="font-size:23px; font-family:Impact, serif" class="text-danger text-center"></div>
 		@if (Model.User.HasEnergyMeter)
 		{
 			<div class="form-group">
 				<label asp-for="DayValue"></label>
 				<input asp-for="DayValue" class="form-control" type="double">
+				<span asp-validation-for="DayValue" class="text-danger text-center"></span>
 			</div>
 			<div class="form-group">
 				<label asp-for="NightValue"></label>
 				<input asp-for="NightValue" class="form-control" type="double">
+				<span asp-validation-for="NightValue" class="text-danger text-center"></span>
 			</div>
 			<button class="btn btn-outline-dark m-1" type="submit">Отправить</button>
 		}

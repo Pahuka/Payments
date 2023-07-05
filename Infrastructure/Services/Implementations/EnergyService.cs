@@ -165,20 +165,26 @@ public class EnergyService : IEnergyService
 
 	private async Task<Energy> GetStatisticResult(Energy currentEnergy, User user)
 	{
-		var lastEnergy = user.EnergyStatistic.LastOrDefault();
+		var lastEnergy = user.EnergyStatistic.OrderBy(x => x.CreatedDate).LastOrDefault();
 
 		if (lastEnergy == null)
 			return currentEnergy;
 
 		if (user.HasEnergyMeter)
 		{
-			currentEnergy.TotalResult += Math.Abs(currentEnergy.DayValue - lastEnergy.DayValue) * _tarifDay;
-			currentEnergy.TotalResult += Math.Abs(currentEnergy.NightValue - lastEnergy.NightValue) * _tarifNight;
+			lastEnergy.TotalResult += currentEnergy.DayValue - lastEnergy.DayValue > 0
+				? (currentEnergy.DayValue - lastEnergy.DayValue) * _tarifDay
+				: 0;
+			lastEnergy.TotalResult += currentEnergy.NightValue - lastEnergy.NightValue > 0
+				? (currentEnergy.NightValue - lastEnergy.NightValue) * _tarifNight
+				: 0;
 		}
 		else
 		{
-			currentEnergy.TotalResult += user.PeopleCount * _normativ * _tarifNormativ;
+			lastEnergy.TotalResult += user.PeopleCount * _normativ * _tarifNormativ;
 		}
+
+		await _energyRepository.Update(lastEnergy);
 
 		return currentEnergy;
 	}

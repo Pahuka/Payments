@@ -160,15 +160,19 @@ public class HVSService : IHVSService
 
 	private async Task<HVS> GetStatisticResult(HVS currentHVS, User user)
 	{
-		var lastHVS = user.HVSStatistic.LastOrDefault();
+		var lastHVS = user.HVSStatistic.OrderBy(x => x.CreatedDate).LastOrDefault();
 
 		if (lastHVS == null)
 			return currentHVS;
 
 		if (user.HasHvsMeter)
-			currentHVS.TotalResult += Math.Abs(currentHVS.CurrentValue - lastHVS.CurrentValue) * _tarif;
+			lastHVS.TotalResult += currentHVS.CurrentValue - lastHVS.CurrentValue > 0
+				? (currentHVS.CurrentValue - lastHVS.CurrentValue) * _tarif
+				: 0;
 		else
-			currentHVS.TotalResult += user.PeopleCount * _normativ * _tarif;
+			lastHVS.TotalResult += user.PeopleCount * _normativ * _tarif;
+
+		await _hvsRepository.Update(lastHVS);
 
 		return currentHVS;
 	}
