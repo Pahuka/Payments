@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Application.Responce;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Authentication;
@@ -64,11 +65,18 @@ public class AccountController : Controller
 		if (ModelState["Login"].ValidationState == ModelValidationState.Valid &&
 		    ModelState["Password"].ValidationState == ModelValidationState.Valid)
 		{
-			var response = await _accountService.Login(model);
-			if (response.Data.IsAuthenticated)
+			var responce = await _accountService.Login(model);
+
+			if (responce.Data == null)
+			{
+				TempData["Message"] = responce.Description;
+				return RedirectToAction("Error");
+			}
+
+			if (responce.Data.IsAuthenticated)
 			{
 				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-					new ClaimsPrincipal(response.Data));
+					new ClaimsPrincipal(responce.Data));
 
 				return RedirectToAction("GetCurrentUserStatistic", "Statistic");
 			}
@@ -89,8 +97,8 @@ public class AccountController : Controller
 	{
 		if (ModelState.IsValid)
 		{
-			var response = await _accountService.ChangePassword(model);
-			return Json(new { description = response.Description });
+			var responce = await _accountService.ChangePassword(model);
+			return Json(new { description = responce.Description });
 		}
 
 		var modelError = ModelState.Values.SelectMany(v => v.Errors);
