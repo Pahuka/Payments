@@ -2,6 +2,7 @@
 
 <div class="form-inline shadow p-3 mb-5 bg-light rounded">
 	<h3 class="mb-0 text-center ParagraphHome">Показания потребления холодной воды</h3>
+	<h5 class="mb-0 text-center ParagraphHome">Единица измерения: м3</h5>
 	<form asp-action="CreateHVSStatistic" enctype="multipart/form-data">
 		<input asp-for="UserId" hidden/>
 		<input asp-for="User.HasHvsMeter" hidden/>
@@ -17,6 +18,7 @@
 		}
 		else
 		{
+			<input asp-for="CurrentValue" hidden />
 			<div class="form-group" align="center">
 				<p></p>
 				<p>У вас не установлен прибор учета холодной воды.</p>

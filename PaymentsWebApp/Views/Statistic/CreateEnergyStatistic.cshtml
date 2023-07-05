@@ -1,7 +1,9 @@
 ﻿@model Infrastructure.ViewModels.EnergyViewModel
 
+<div class="container-fluid">
 <div class="form-inline shadow p-3 mb-5 bg-light rounded">
 	<h3 class="mb-0 text-center ParagraphHome">Показания потребления электроэнергии</h3>
+		<h5 class="mb-0 text-center ParagraphHome">Единица измерения: кВТ.ч</h5>
 	<form asp-action="CreateEnergyStatistic" enctype="multipart/form-data">
 		<input asp-for="UserId" hidden/>
 		<input asp-for="User.HasEnergyMeter" hidden/>
@@ -22,6 +24,8 @@
 		}
 		else
 		{
+			<input asp-for="DayValue" hidden />
+			<input asp-for="NightValue" hidden />
 			<div class="form-group" align="center">
 				<p></p>
 				<p>У вас не установлен прибор учета электроэнергии.</p>
@@ -30,4 +34,5 @@
 			<button class="btn btn-outline-dark m-1" type="submit">Отправить нормативные данные</button>
 		}
 	</form>
+</div>
 </div>

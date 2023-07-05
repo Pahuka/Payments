@@ -134,6 +134,7 @@ public class AccountService : IAccountService
 
 	private ClaimsIdentity Authenticate(User user)
 	{
+		//TODO: Задел на будущее, для редактирования уже существующих данных
 		//var role = user.IsAdministrator ? "Administrator" : "User";
 		var role = "User";
 		var claims = new List<Claim>

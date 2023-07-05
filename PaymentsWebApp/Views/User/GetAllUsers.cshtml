@@ -11,7 +11,9 @@
 			<th>Прибор учета электроэнергии</th>
 			<th>Прибор учета горячей воды</th>
 			<th>Прибор учета холодной воды</th>
-			<th>Статистика</th>
+			<th>Статистика электропотребления</th>
+			<th>Статистика по холодной воде</th>
+			<th>Статистика по горячей воде</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -25,30 +27,52 @@
 				<td>@user.HasGvsMeter</td>
 				<td>@user.HasHvsMeter</td>
 				<td>
-					@if (user.EnergyStatistic != null)
-					{
-						foreach (var statistic in user.EnergyStatistic)
+					<div class="m-1 overflow-auto" style="max-width: 260px; max-height: 100px;">
+						@if (user.EnergyStatistic != null)
 						{
-							<div class="m-1">
-								<p>@statistic.Date</p>
-								<p>@statistic.DayValue</p>
-								<p>@statistic.NightValue</p>
-							</div>
+							foreach (var statistic in user.EnergyStatistic)
+							{
+								<div>
+									<p>@statistic.Date</p>
+									<p>@statistic.DayValue</p>
+									<p>@statistic.NightValue</p>
+									<p>@statistic.TotalResult</p>
+								</div>
+							}
 						}
-					}
+					</div>
 				</td>
-				@*<td>
-				<div class="m-1">
-				<form asp-controller="User" asp-action="EditUser" method="get">
-				<input type="text" id="login" name="login" value="@user.Login" hidden="true"/>
-				<input type="submit" value="Редактировать" class="btn btn-outline-dark"/>
-				</form>
-				<form asp-controller="User" asp-action="RemoveUser">
-				<input type="text" id="login" name="login" value="@user.Login" hidden="true"/>
-				<input type="submit" value="Удалить" class="btn btn-outline-dark"/>
-				</form>
-				</div>
-				</td>*@
+				<td>
+					<div class="m-1 overflow-auto" style="max-width: 260px; max-height: 100px;">
+						@if (user.HVSStatistic != null)
+						{
+							foreach (var statistic in user.HVSStatistic)
+							{
+								<div class="m-1 overflow-auto">
+									<p>@statistic.Date</p>
+									<p>@statistic.CurrentValue</p>
+									<p>@statistic.TotalResult</p>
+								</div>
+							}
+						}
+					</div>
+				</td>
+				<td>
+					<div class="m-1 overflow-auto" style="max-width: 260px; max-height: 100px;">
+						@if (user.GVSStatistic != null)
+						{
+							foreach (var statistic in user.GVSStatistic)
+							{
+								<div class="m-1 overflow-auto">
+									<p>@statistic.Date</p>
+									<p>@statistic.CurrentValue</p>
+									<p>@statistic.TotalResultTE</p>
+									<p>@statistic.TotalResultTN</p>
+								</div>
+							}
+						}
+					</div>
+				</td>
 			</tr>
 		}
 		</tbody>

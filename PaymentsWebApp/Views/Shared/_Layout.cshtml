@@ -12,11 +12,8 @@
 <header>
 	@if (User.Identity.IsAuthenticated)
 	{
-		<div class="m-3">
-			<p>Вы авторизованы под логином @User.Identity.Name</p>
-			<form method="post" asp-controller="Account" asp-action="Logout">
-				<input class="btn btn-outline-dark" type="submit" value="Выход"/>
-			</form>
+		<div>
+			<p class="fs-4">Вы авторизованы под логином @User.Identity.Name</p>
 		</div>
 	}
 	<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -26,25 +23,28 @@
 					@if (!User.Identity.IsAuthenticated)
 					{
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Вход</a>
+								<a class="btn btn-outline-dark" asp-area="" asp-controller="Account" asp-action="Login">Вход</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
+								<a class="btn btn-outline-dark" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
 						</li>
 					}
 					else
 					{
+						<form method="post" asp-controller="Account" asp-action="Logout">
+							<input class="btn btn-outline-dark" type="submit" value="Выход"/>
+						</form>
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Statistic" asp-action="GetCurrentUserStatistic">Показания</a>
+							<a class="btn btn-outline-dark" asp-area="" asp-controller="Statistic" asp-action="GetCurrentUserStatistic">Показания</a>
 						</li>
 					}
 					@if (User.IsInRole("Administrator"))
 					{
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="CreateUser">Создать пользователя</a>
+									<a class="btn btn-outline-dark" asp-area="" asp-controller="User" asp-action="CreateUser">Создать пользователя</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="GetAllUsers">Список пользователей</a>
+									<a class="btn btn-outline-dark" asp-area="" asp-controller="User" asp-action="GetAllUsers">Список пользователей</a>
 						</li>
 					}
 				</ul>
