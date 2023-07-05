@@ -9,12 +9,16 @@ namespace Infrastructure.Services.Implementations;
 public class EnergyService : IEnergyService
 {
 	private readonly IEnergyRepository _energyRepository;
-	private readonly IStatisticRepository _statisticRepository;
+	private readonly double _normativ = 164;
+	private readonly double _tarifDay = 4.9;
+	private readonly double _tarifNight = 2.31;
+	private readonly double _tarifNormativ = 4.28;
+	private readonly IUserRepository _userRepository;
 
-	public EnergyService(IEnergyRepository energyRepository, IStatisticRepository statisticRepository)
+	public EnergyService(IEnergyRepository energyRepository, IUserRepository userRepository)
 	{
 		_energyRepository = energyRepository;
-		_statisticRepository = statisticRepository;
+		_userRepository = userRepository;
 	}
 
 	public async Task<IResponce<IList<EnergyViewModel>>> GetAll()
@@ -33,7 +37,7 @@ public class EnergyService : IEnergyService
 			foreach (var energy in energies)
 				responce.Data.Add(new EnergyViewModel(energy)
 				{
-					Statistic = new StatisticViewModel(energy?.Statistic)
+					User = new UserViewModel(energy.User)
 				});
 
 			return responce;
@@ -52,13 +56,16 @@ public class EnergyService : IEnergyService
 		var responce = new Responce<bool>();
 		try
 		{
-			var energy = new Energy()
+			var energy = new Energy
 			{
-				CurrentValue = viewModel.CurrentValue,
-				Statistic = await _statisticRepository.Get(viewModel.Statistic.Id)
+				DayValue = viewModel.DayValue,
+				NightValue = viewModel.NightValue,
+				UserId = viewModel.UserId
 			};
 
-			responce.Data = await _energyRepository.Create(energy);
+			var user = await _userRepository.GetById(viewModel.UserId);
+
+			responce.Data = await _energyRepository.Create(await GetStatisticResult(energy, user));
 
 			return responce;
 		}
@@ -85,8 +92,8 @@ public class EnergyService : IEnergyService
 				return responce;
 			}
 
-			energy.CurrentValue = viewModel.CurrentValue;
-			energy.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
+			energy.DayValue = viewModel.DayValue;
+			energy.NightValue = viewModel.NightValue;
 
 			await _energyRepository.Update(energy);
 			responce.Data = viewModel;
@@ -117,7 +124,7 @@ public class EnergyService : IEnergyService
 
 			responce.Data = new EnergyViewModel(energy)
 			{
-				Statistic = new StatisticViewModel(energy?.Statistic)
+				User = new UserViewModel(energy.User)
 			};
 
 			return responce;
@@ -154,5 +161,31 @@ public class EnergyService : IEnergyService
 				Data = false
 			};
 		}
+	}
+
+	private async Task<Energy> GetStatisticResult(Energy currentEnergy, User user)
+	{
+		var lastEnergy = user.EnergyStatistic.OrderBy(x => x.CreatedDate).LastOrDefault();
+
+		if (lastEnergy == null)
+			return currentEnergy;
+
+		if (user.HasEnergyMeter)
+		{
+			lastEnergy.TotalResult += currentEnergy.DayValue - lastEnergy.DayValue > 0
+				? (currentEnergy.DayValue - lastEnergy.DayValue) * _tarifDay
+				: 0;
+			lastEnergy.TotalResult += currentEnergy.NightValue - lastEnergy.NightValue > 0
+				? (currentEnergy.NightValue - lastEnergy.NightValue) * _tarifNight
+				: 0;
+		}
+		else
+		{
+			lastEnergy.TotalResult += user.PeopleCount * _normativ * _tarifNormativ;
+		}
+
+		await _energyRepository.Update(lastEnergy);
+
+		return currentEnergy;
 	}
 }

@@ -22,7 +22,9 @@ public class UserRepository : IUserRepository
 	public async Task<IQueryable<User>> GetAll()
 	{
 		return _appDbContext.Users.AsQueryable()
-			.Include(x => x.Statistic);
+			.Include(x => x.GVSStatistic)
+			.Include(x => x.EnergyStatistic)
+			.Include(x => x.HVSStatistic);
 	}
 
 	public async Task<bool> DeleteAsync(User entity)
@@ -42,14 +44,18 @@ public class UserRepository : IUserRepository
 	public async Task<User> Get(string login)
 	{
 		return await _appDbContext.Users
-			.Include(x => x.Statistic)
+			.Include(x => x.GVSStatistic)
+			.Include(x => x.EnergyStatistic)
+			.Include(x => x.HVSStatistic)
 			.FirstOrDefaultAsync(x => x.Login.Equals(login));
 	}
 
 	public async Task<User> GetById(Guid id)
 	{
 		return await _appDbContext.Users
-			.Include(x => x.Statistic)
-			.FirstOrDefaultAsync(x => x.Login.Equals(id));
+			.Include(x => x.GVSStatistic)
+			.Include(x => x.EnergyStatistic)
+			.Include(x => x.HVSStatistic)
+			.FirstOrDefaultAsync(x => x.Id.Equals(id));
 	}
 }

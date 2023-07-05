@@ -9,12 +9,16 @@ namespace Infrastructure.Services.Implementations;
 public class GVSService : IGVSService
 {
 	private readonly IGVSRepository _gvsRepository;
-	private readonly IStatisticRepository _statisticRepository;
+	private readonly double _normativTE = 0.05349;
+	private readonly double _normativTN = 4.01;
+	private readonly double _tarifTE = 998.69;
+	private readonly double _tarifTN = 35.78;
+	private readonly IUserRepository _userRepository;
 
-	public GVSService(IGVSRepository gvsRepository, IStatisticRepository statisticRepository)
+	public GVSService(IGVSRepository gvsRepository, IUserRepository userRepository)
 	{
 		_gvsRepository = gvsRepository;
-		_statisticRepository = statisticRepository;
+		_userRepository = userRepository;
 	}
 
 	public async Task<IResponce<IList<GVSViewModel>>> GetAll()
@@ -33,7 +37,7 @@ public class GVSService : IGVSService
 			foreach (var gvs in gvses)
 				responce.Data.Add(new GVSViewModel(gvs)
 				{
-					Statistic = new StatisticViewModel(gvs?.Statistic)
+					User = new UserViewModel(gvs.User)
 				});
 
 			return responce;
@@ -55,10 +59,11 @@ public class GVSService : IGVSService
 			var gvs = new GVS
 			{
 				CurrentValue = viewModel.CurrentValue,
-				Statistic = await _statisticRepository.Get(viewModel.Statistic.Id)
+				UserId = viewModel.UserId
 			};
 
-			responce.Data = await _gvsRepository.Create(gvs);
+			var user = await _userRepository.GetById(viewModel.UserId);
+			responce.Data = await _gvsRepository.Create(await GetStatisticResult(gvs, user));
 
 			return responce;
 		}
@@ -86,7 +91,6 @@ public class GVSService : IGVSService
 			}
 
 			gvs.CurrentValue = viewModel.CurrentValue;
-			gvs.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
 
 			await _gvsRepository.Update(gvs);
 			responce.Data = viewModel;
@@ -117,7 +121,7 @@ public class GVSService : IGVSService
 
 			responce.Data = new GVSViewModel(gvs)
 			{
-				Statistic = new StatisticViewModel(gvs?.Statistic)
+				User = new UserViewModel(gvs.User)
 			};
 
 			return responce;
@@ -154,5 +158,36 @@ public class GVSService : IGVSService
 				Data = false
 			};
 		}
+	}
+
+	private async Task<GVS> GetStatisticResult(GVS currentGVS, User user)
+	{
+		var lastGVS = user.GVSStatistic.OrderBy(x => x.CreatedDate).LastOrDefault();
+		var gvsTN = 0.0;
+
+		if (lastGVS == null)
+			return currentGVS;
+
+		if (user.HasGvsMeter)
+		{
+			gvsTN = currentGVS.CurrentValue - lastGVS.CurrentValue;
+
+			if (gvsTN <= 0)
+				return currentGVS;
+
+			lastGVS.TotalResultTN += gvsTN * _tarifTN;
+			lastGVS.TotalResultTE += gvsTN * _normativTE * _tarifTE;
+		}
+		else
+		{
+			gvsTN = user.PeopleCount * _normativTN;
+
+			lastGVS.TotalResultTE += gvsTN * _tarifTE;
+			lastGVS.TotalResultTN += gvsTN * _normativTE * _tarifTE;
+		}
+
+		await _gvsRepository.Update(lastGVS);
+
+		return currentGVS;
 	}
 }

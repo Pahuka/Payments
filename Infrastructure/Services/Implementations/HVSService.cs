@@ -9,12 +9,14 @@ namespace Infrastructure.Services.Implementations;
 public class HVSService : IHVSService
 {
 	private readonly IHVSRepository _hvsRepository;
-	private readonly IStatisticRepository _statisticRepository;
+	private readonly double _normativ = 4.85;
+	private readonly double _tarif = 35.78;
+	private readonly IUserRepository _userRepository;
 
-	public HVSService(IHVSRepository hvsRepository, IStatisticRepository statisticRepository)
+	public HVSService(IHVSRepository hvsRepository, IUserRepository userRepository)
 	{
 		_hvsRepository = hvsRepository;
-		_statisticRepository = statisticRepository;
+		_userRepository = userRepository;
 	}
 
 	public async Task<IResponce<IList<HVSViewModel>>> GetAll()
@@ -33,7 +35,7 @@ public class HVSService : IHVSService
 			foreach (var hvs in hvses)
 				responce.Data.Add(new HVSViewModel(hvs)
 				{
-					Statistic = new StatisticViewModel(hvs?.Statistic)
+					User = new UserViewModel(hvs.User)
 				});
 
 			return responce;
@@ -52,13 +54,14 @@ public class HVSService : IHVSService
 		var responce = new Responce<bool>();
 		try
 		{
-			var hvs = new HVS()
+			var hvs = new HVS
 			{
 				CurrentValue = viewModel.CurrentValue,
-				Statistic = await _statisticRepository.Get(viewModel.Statistic.Id)
+				UserId = viewModel.UserId
 			};
 
-			responce.Data = await _hvsRepository.Create(hvs);
+			var user = await _userRepository.GetById(viewModel.UserId);
+			responce.Data = await _hvsRepository.Create(await GetStatisticResult(hvs, user));
 
 			return responce;
 		}
@@ -86,7 +89,6 @@ public class HVSService : IHVSService
 			}
 
 			hvs.CurrentValue = viewModel.CurrentValue;
-			hvs.Statistic = await _statisticRepository.Get(viewModel.Statistic.Id);
 
 			await _hvsRepository.Update(hvs);
 			responce.Data = viewModel;
@@ -117,7 +119,7 @@ public class HVSService : IHVSService
 
 			responce.Data = new HVSViewModel(hvs)
 			{
-				Statistic = new StatisticViewModel(hvs?.Statistic)
+				User = new UserViewModel(hvs.User)
 			};
 
 			return responce;
@@ -154,5 +156,24 @@ public class HVSService : IHVSService
 				Data = false
 			};
 		}
+	}
+
+	private async Task<HVS> GetStatisticResult(HVS currentHVS, User user)
+	{
+		var lastHVS = user.HVSStatistic.OrderBy(x => x.CreatedDate).LastOrDefault();
+
+		if (lastHVS == null)
+			return currentHVS;
+
+		if (user.HasHvsMeter)
+			lastHVS.TotalResult += currentHVS.CurrentValue - lastHVS.CurrentValue > 0
+				? (currentHVS.CurrentValue - lastHVS.CurrentValue) * _tarif
+				: 0;
+		else
+			lastHVS.TotalResult += user.PeopleCount * _normativ * _tarif;
+
+		await _hvsRepository.Update(lastHVS);
+
+		return currentHVS;
 	}
 }

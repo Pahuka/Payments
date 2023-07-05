@@ -22,7 +22,7 @@ public class GVSRepository : IGVSRepository
 	public async Task<IQueryable<GVS>> GetAll()
 	{
 		return _appDbContext.GVS.AsQueryable()
-			.Include(x => x.Statistic);
+			.Include(x => x.User);
 	}
 
 	public async Task<bool> DeleteAsync(GVS entity)
@@ -42,7 +42,7 @@ public class GVSRepository : IGVSRepository
 	public async Task<GVS> Get(Guid Id)
 	{
 		return await _appDbContext.GVS
-			.Include(x => x.Statistic)
+			.Include(x => x.User)
 			.FirstOrDefaultAsync(x => x.Id.Equals(Id));
 	}
 }

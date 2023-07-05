@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Entities\EnergyMeter.cs" />
+    <Compile Remove="Entities\Statistic.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Entities\Abstract\" />
   </ItemGroup>
 

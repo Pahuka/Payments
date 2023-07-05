@@ -8,21 +8,26 @@ namespace Infrastructure.Services.Implementations;
 
 public class UserService : IUserService
 {
+	private readonly IEnergyRepository _energyRepository;
+	private readonly IGVSRepository _gvsRepository;
+	private readonly IHVSRepository _hvsRepository;
 	private readonly IUserRepository _userRepository;
-	private readonly IStatisticRepository _statisticRepository;
 
-	public UserService(IUserRepository userRepository, IStatisticRepository statisticRepository)
+	public UserService(IUserRepository userRepository, IEnergyRepository energyRepository, IGVSRepository gvsRepository,
+		IHVSRepository hvsRepository)
 	{
 		_userRepository = userRepository;
-		_statisticRepository = statisticRepository;
+		_energyRepository = energyRepository;
+		_gvsRepository = gvsRepository;
+		_hvsRepository = hvsRepository;
 	}
 
 	public async Task<IResponce<IList<UserViewModel>>> GetAll()
 	{
-		var responce = new Responce<IList<UserViewModel>>(){Data = new List<UserViewModel>()};
+		var responce = new Responce<IList<UserViewModel>> { Data = new List<UserViewModel>() };
 		try
 		{
-			var users = _userRepository.GetAll().Result;
+			var users = await _userRepository.GetAll();
 
 			if (users.Count() == 0)
 			{
@@ -32,18 +37,18 @@ public class UserService : IUserService
 
 			foreach (var user in users)
 			{
-				responce.Data.Add(new UserViewModel(user));
-				
-				if (user.Statistic != null)
-				{
-					var userVm = responce.Data.Last();
-					userVm.Statistic = new List<StatisticViewModel>();
+				var userVm = new UserViewModel(user);
 
-					foreach (var statistic in user.Statistic)
-					{
-						responce.Data.Last().Statistic.Add(new StatisticViewModel(statistic) { User = userVm });
-					}
-				}
+				foreach (var statistic in user.EnergyStatistic)
+					userVm.EnergyStatistic.Add(new EnergyViewModel(statistic) { User = userVm });
+
+				foreach (var statistic in user.GVSStatistic)
+					userVm.GVSStatistic.Add(new GVSViewModel(statistic) { User = userVm });
+
+				foreach (var statistic in user.HVSStatistic)
+					userVm.HVSStatistic.Add(new HVSViewModel(statistic) { User = userVm });
+
+				responce.Data.Add(userVm);
 			}
 
 			return responce;
@@ -62,18 +67,23 @@ public class UserService : IUserService
 		var responce = new Responce<bool>();
 		try
 		{
-			var user = new User()
+			var user = new User
 			{
 				FirstName = viewModel.FirstName,
 				LastName = viewModel.LastName,
 				Login = viewModel.Login,
 				Password = viewModel.Password,
+				PeopleCount = viewModel.PeopleCount,
 				HasEnergyMeter = viewModel.HasEnergyMeter,
 				HasHvsMeter = viewModel.HasHvsMeter,
 				HasGvsMeter = viewModel.HasGvsMeter
 			};
 
 			responce.Data = await _userRepository.Create(user);
+
+			await _energyRepository.Create(new Energy { UserId = user.Id });
+			await _gvsRepository.Create(new GVS { UserId = user.Id });
+			await _hvsRepository.Create(new HVS { UserId = user.Id });
 
 			return responce;
 		}
@@ -82,7 +92,7 @@ public class UserService : IUserService
 			return new Responce<bool>
 			{
 				Description = $"[Create] : {e.Message}",
-				Data = false,
+				Data = false
 			};
 		}
 	}
@@ -99,8 +109,14 @@ public class UserService : IUserService
 				responce.Description = "Найдено 0 пользователей";
 				return responce;
 			}
-			
+
 			responce.Data = new UserViewModel(user);
+			responce.Data.HVSStatistic =
+				user.HVSStatistic.Select(x => new HVSViewModel(x) { User = responce.Data }).ToList();
+			responce.Data.EnergyStatistic =
+				user.EnergyStatistic.Select(x => new EnergyViewModel(x) { User = responce.Data }).ToList();
+			responce.Data.GVSStatistic =
+				user.GVSStatistic.Select(x => new GVSViewModel(x) { User = responce.Data }).ToList();
 
 			return responce;
 		}
@@ -127,6 +143,12 @@ public class UserService : IUserService
 			}
 
 			responce.Data = new UserViewModel(user);
+			responce.Data.HVSStatistic =
+				user.HVSStatistic.Select(x => new HVSViewModel(x) { User = responce.Data }).ToList();
+			responce.Data.EnergyStatistic =
+				user.EnergyStatistic.Select(x => new EnergyViewModel(x) { User = responce.Data }).ToList();
+			responce.Data.GVSStatistic =
+				user.GVSStatistic.Select(x => new GVSViewModel(x) { User = responce.Data }).ToList();
 
 			return responce;
 		}
@@ -156,6 +178,12 @@ public class UserService : IUserService
 			user.LastName = viewModel.LastName;
 			user.Login = viewModel.Login;
 			user.Password = viewModel.Password;
+			user.PeopleCount = viewModel.PeopleCount;
+
+			//TODO: Скорее всего можно убрать
+			user.EnergyStatistic = await ViewModelEnergyStatistic(viewModel.EnergyStatistic);
+			user.HVSStatistic = await ViewModelHVSStatistic(viewModel.HVSStatistic);
+			user.GVSStatistic = await ViewModelGVSStatistic(viewModel.GVSStatistic);
 
 			await _userRepository.Update(user);
 			responce.Data = viewModel;
@@ -194,5 +222,75 @@ public class UserService : IUserService
 				Data = false
 			};
 		}
+	}
+
+	private async Task<IList<Energy>> ViewModelEnergyStatistic(IList<EnergyViewModel> viewModel)
+	{
+		if (viewModel == null)
+			return null;
+
+		var result = new List<Energy>();
+
+		foreach (var energyView in viewModel)
+		{
+			var energy = new Energy
+			{
+				DayValue = energyView.DayValue,
+				NightValue = energyView.NightValue,
+				UserId = energyView.UserId
+			};
+
+			await _energyRepository.Create(energy);
+
+			result.Add(energy);
+		}
+
+		return result;
+	}
+
+	private async Task<IList<GVS>> ViewModelGVSStatistic(IList<GVSViewModel> viewModel)
+	{
+		if (viewModel == null)
+			return null;
+
+		var result = new List<GVS>();
+
+		foreach (var gvsViewModel in viewModel)
+		{
+			var gvs = new GVS
+			{
+				CurrentValue = gvsViewModel.CurrentValue,
+				UserId = gvsViewModel.UserId
+			};
+
+			await _gvsRepository.Create(gvs);
+
+			result.Add(gvs);
+		}
+
+		return result;
+	}
+
+	private async Task<IList<HVS>> ViewModelHVSStatistic(IList<HVSViewModel> viewModel)
+	{
+		if (viewModel == null)
+			return null;
+
+		var result = new List<HVS>();
+
+		foreach (var hvsViewModel in viewModel)
+		{
+			var hvs = new HVS
+			{
+				CurrentValue = hvsViewModel.CurrentValue,
+				UserId = hvsViewModel.UserId
+			};
+
+			await _hvsRepository.Create(hvs);
+
+			result.Add(hvs);
+		}
+
+		return result;
 	}
 }

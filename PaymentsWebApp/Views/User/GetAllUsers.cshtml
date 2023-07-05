@@ -4,50 +4,80 @@
 	<h3 class="mb-0 text-center ParagraphHome">Все пользователи</h3>
 	<table class="table table-striped shadow p-3 mb-5 bg-light rounded">
 		<thead>
-			<tr>
-				<th>Имя</th>
-				<th>Фамилия</th>
-				<th>Логин</th>
-				<th>Прибор учета электроэнергии</th>
-				<th>Прибор учета горячей воды</th>
-				<th>Прибор учета холодной воды</th>
-				<th>Статистика</th>
-			</tr>
+		<tr>
+			<th>Имя</th>
+			<th>Фамилия</th>
+			<th>Логин</th>
+			<th>Прибор учета электроэнергии</th>
+			<th>Прибор учета горячей воды</th>
+			<th>Прибор учета холодной воды</th>
+			<th>Статистика электропотребления</th>
+			<th>Статистика по холодной воде</th>
+			<th>Статистика по горячей воде</th>
+		</tr>
 		</thead>
 		<tbody>
-			@foreach (var user in Model)
-			{
-				<tr>
-					<th scope="row">@user.FirstName</th>
-					<td>@user.LastName</td>
-					<td>@user.Login</td>
-					<td>@user.HasEnergyMeter</td>
-					<td>@user.HasGvsMeter</td>
-					<td>@user.HasHvsMeter</td>
-					<td>@if (@user.Statistic != null)
-					    {
-							foreach (var statistic in @user.Statistic)
-						    {
-								<p>@statistic.Id</p>
-						    }
-					    }</td>
-					@*<td>
-				<div class="m-1">
-				<form asp-controller="User" asp-action="EditUser" method="get">
-				<input type="text" id="login" name="login" value="@user.Login" hidden="true"/>
-				<input type="submit" value="Редактировать" class="btn btn-outline-dark"/>
-				</form>
-				<form asp-controller="User" asp-action="RemoveUser">
-				<input type="text" id="login" name="login" value="@user.Login" hidden="true"/>
-				<input type="submit" value="Удалить" class="btn btn-outline-dark"/>
-				</form>
-				</div>
-				</td>*@
-				</tr>
-			}
+		@foreach (var user in Model)
+		{
+			<tr>
+				<th scope="row">@user.FirstName</th>
+				<td>@user.LastName</td>
+				<td>@user.Login</td>
+				<td>@user.HasEnergyMeter</td>
+				<td>@user.HasGvsMeter</td>
+				<td>@user.HasHvsMeter</td>
+				<td>
+					<div class="m-1 overflow-auto" style="max-width: 260px; max-height: 100px;">
+						@if (user.EnergyStatistic != null)
+						{
+							foreach (var statistic in user.EnergyStatistic)
+							{
+								<div>
+									<p>@statistic.Date</p>
+									<p>@statistic.DayValue</p>
+									<p>@statistic.NightValue</p>
+									<p>@statistic.TotalResult</p>
+								</div>
+							}
+						}
+					</div>
+				</td>
+				<td>
+					<div class="m-1 overflow-auto" style="max-width: 260px; max-height: 100px;">
+						@if (user.HVSStatistic != null)
+						{
+							foreach (var statistic in user.HVSStatistic)
+							{
+								<div class="m-1 overflow-auto">
+									<p>@statistic.Date</p>
+									<p>@statistic.CurrentValue</p>
+									<p>@statistic.TotalResult</p>
+								</div>
+							}
+						}
+					</div>
+				</td>
+				<td>
+					<div class="m-1 overflow-auto" style="max-width: 260px; max-height: 100px;">
+						@if (user.GVSStatistic != null)
+						{
+							foreach (var statistic in user.GVSStatistic)
+							{
+								<div class="m-1 overflow-auto">
+									<p>@statistic.Date</p>
+									<p>@statistic.CurrentValue</p>
+									<p>@statistic.TotalResultTE</p>
+									<p>@statistic.TotalResultTN</p>
+								</div>
+							}
+						}
+					</div>
+				</td>
+			</tr>
+		}
 		</tbody>
 	</table>
 	<form asp-controller="User" asp-action="CreateUser" method="get">
-		<input type="submit" value="Добавить" class="btn btn-outline-dark" />
+		<input type="submit" value="Добавить" class="btn btn-outline-dark"/>
 	</form>
 </div>

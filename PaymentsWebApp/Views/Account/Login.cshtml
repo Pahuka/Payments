@@ -1,0 +1,35 @@
+﻿@{
+	Layout = "_Layout";
+	ViewBag.Title = "Вход в аккаунт";
+}
+@model Infrastructure.ViewModels.UserViewModel
+
+<div class="container py-5 form-inline shadow p-3 mb-5 bg-light rounded">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row justify-content-center">
+				<div class="col-md-10">
+					<span class="anchor"></span>
+					<h3 class="mb-0 text-center ParagraphHome">Вход в аккаунт</h3>
+					<p></p>
+					<form autocomplete="on" method="post" asp-controller="Account" asp-action="Login">
+						<div asp-validation-summary="ModelOnly" style="font-size:23px; font-family:Impact" class="text-danger text-center"></div>
+						<div class="form-group">
+							<input asp-for="Login" placeholder="Логин" class="form-control textbox-dg font-weight-bold text-center" type="text">
+							<span asp-validation-for="Login" class="text-danger text-center"></span>
+						</div>
+						<p></p>
+						<div class="form-group">
+							<input autocomplete="new-password" asp-for="Password" placeholder="Пароль" class="form-control textbox-dg font-weight-bold text-center" type="password">
+							<span asp-validation-for="Password" class="text-danger text-center"></span>
+						</div>
+						<div>
+							<p></p>
+							<button class="btn btn-outline-dark m-1">Войти</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

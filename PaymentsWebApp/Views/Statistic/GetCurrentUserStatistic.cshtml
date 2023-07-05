@@ -1,0 +1,99 @@
+﻿@model Infrastructure.ViewModels.UserViewModel
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-auto">
+
+			<div class="form-inline shadow p-3 mb-5 bg-light rounded">
+				<div asp-validation-summary="All" style="font-size:23px; font-family:Impact, serif" class="text-danger text-center"></div>
+				<div class="form-group">
+					<label asp-for="FirstName"></label>
+					<input class="form-control" type="text" placeholder="@Model.FirstName" readonly>
+				</div>
+				<div class="form-group">
+					<label asp-for="LastName"></label>
+					<input class="form-control" type="text" placeholder="@Model.LastName" readonly>
+				</div>
+				<div class="form-group">
+					<label asp-for="Login"></label>
+					<input class="form-control" type="text" placeholder="@Model.Login" readonly>
+				</div>
+				<div class="form-group">
+					<label asp-for="HasGvsMeter"></label>
+					<input class="form-control" type="text" placeholder="@(Model.HasGvsMeter ? "Есть" : "Нет")" readonly>
+				</div>
+				<div class="form-group">
+					<label asp-for="HasHvsMeter"></label>
+					<input class="form-control" type="text" placeholder="@(Model.HasHvsMeter ? "Есть" : "Нет")" readonly>
+				</div>
+				<div class="form-group">
+					<label asp-for="HasEnergyMeter"></label>
+					<input class="form-control" type="text" placeholder="@(Model.HasEnergyMeter ? "Есть" : "Нет")" readonly>
+				</div>
+				<div class="form-group">
+					<label asp-for="PeopleCount"></label>
+					<input class="form-control" type="text" placeholder="@Model.PeopleCount.ToString()" readonly>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-auto">
+
+			<table class="table table-striped shadow p-3 mb-5 bg-light rounded">
+				<thead>
+				<tr>
+					<th>Тип показаний</th>
+					<th>Статистика</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<th scope="row">ГВС</th>
+					<td>
+						<p>Теплоноситель: @Model.GetCurrentTotal(Model.GVSStatistic.Select(x => x.TotalResultTN)) руб</p>
+						<p>Тепловая энергия: @Model.GetCurrentTotal(Model.GVSStatistic.Select(x => x.TotalResultTE)) руб</p>
+						<div class="btn-group" role="group">
+							<form asp-controller="Statistic" asp-action="CreateGVSStatistic" method="get">
+								<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
+								<input type="submit" value="Добавить показания" class="btn btn-outline-dark"/>
+							</form>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">ХВС</th>
+					<td>
+							<p>@Model.GetCurrentTotal(Model.HVSStatistic.Select(x => x.TotalResult)) руб</p>
+						<div class="btn-group" role="group">
+							<form asp-controller="Statistic" asp-action="CreateHVSStatistic" method="get">
+								<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
+								<input type="submit" value="Добавить показания" class="btn btn-outline-dark"/>
+							</form>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Электроэнергия</th>
+					<td>
+							<p>@Model.GetCurrentTotal(Model.EnergyStatistic.Select(x => x.TotalResult)) руб</p>
+						<div class="btn-group" role="group">
+							<form asp-controller="Statistic" asp-action="CreateEnergyStatistic" method="get">
+								<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
+								<input type="submit" value="Добавить показания" class="btn btn-outline-dark"/>
+							</form>
+						</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-auto">
+
+			<div class="form-group">
+				<label style="font-size:23px; font-family:Impact, serif">Итого</label>
+				<input style="font-size:23px; font-family:Impact, serif" class="form-control" type="text" placeholder="@Model.GetAllTotal() руб" readonly>
+			</div>
+
+		</div>
+	</div>
+</div>

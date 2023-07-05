@@ -1,6 +1,6 @@
 ﻿@model Infrastructure.ViewModels.UserViewModel
 
-<div style="padding: 10px;" />
+<div style="padding: 10px;"/>
 <div class="col-md-12">
 	<div class="card-body">
 		<div class="card card-outline-secondary" style="background-color: white">
@@ -25,6 +25,10 @@
 					<div class="form-group">
 						<label asp-for="Password"></label>
 						<input asp-for="Password" class="form-control" type="text">
+					</div>
+					<div class="form-group">
+						<label asp-for="PeopleCount"></label>
+						<input asp-for="PeopleCount" class="form-control" type="number">
 					</div>
 					<div class="form-group">
 						<label asp-for="HasGvsMeter"></label>
