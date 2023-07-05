@@ -8,11 +8,11 @@ namespace Infrastructure.Services.Implementations;
 
 public class GVSService : IGVSService
 {
-	private readonly double _normativTN = 4.01;
+	private readonly IGVSRepository _gvsRepository;
 	private readonly double _normativTE = 0.05349;
+	private readonly double _normativTN = 4.01;
 	private readonly double _tarifTE = 998.69;
 	private readonly double _tarifTN = 35.78;
-	private readonly IGVSRepository _gvsRepository;
 	private readonly IUserRepository _userRepository;
 
 	public GVSService(IGVSRepository gvsRepository, IUserRepository userRepository)
@@ -171,16 +171,16 @@ public class GVSService : IGVSService
 		if (user.HasGvsMeter)
 		{
 			gvsTN = Math.Abs(currentGVS.CurrentValue - lastGVS.CurrentValue);
-			
+
 			currentGVS.TotalResultTN += gvsTN * _tarifTN;
-			currentGVS.TotalResultTE += (gvsTN * _normativTE) * _tarifTE;
+			currentGVS.TotalResultTE += gvsTN * _normativTE * _tarifTE;
 		}
 		else
 		{
 			gvsTN = user.PeopleCount * _normativTN;
 
 			currentGVS.TotalResultTE += gvsTN * _tarifTE;
-			currentGVS.TotalResultTN += (gvsTN * _normativTE) * _tarifTE;
+			currentGVS.TotalResultTN += gvsTN * _normativTE * _tarifTE;
 		}
 
 		return currentGVS;

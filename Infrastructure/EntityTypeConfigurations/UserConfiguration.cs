@@ -16,7 +16,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 		builder
 			.HasMany(d => d.EnergyStatistic)
 			.WithOne(p => p.User)
-			.HasForeignKey(k=>k.UserId);
+			.HasForeignKey(k => k.UserId);
 		builder
 			.HasMany(d => d.GVSStatistic)
 			.WithOne(p => p.User)

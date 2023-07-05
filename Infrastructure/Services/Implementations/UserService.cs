@@ -238,7 +238,6 @@ public class UserService : IUserService
 			{
 				DayValue = energyView.DayValue,
 				NightValue = energyView.NightValue,
-				NormativValue = energyView.NormativValue,
 				UserId = energyView.UserId
 			};
 

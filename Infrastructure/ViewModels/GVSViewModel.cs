@@ -6,8 +6,8 @@ public class GVSViewModel : ViewModelBase
 {
 	public GVSViewModel()
 	{
-		
 	}
+
 	public GVSViewModel(GVS gvs)
 	{
 		Id = gvs.Id;

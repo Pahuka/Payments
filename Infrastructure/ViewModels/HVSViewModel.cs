@@ -6,7 +6,6 @@ public class HVSViewModel : ViewModelBase
 {
 	public HVSViewModel()
 	{
-		
 	}
 
 	public HVSViewModel(HVS hvs)

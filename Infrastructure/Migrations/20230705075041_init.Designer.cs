@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230705071823_init")]
+    [Migration("20230705075041_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -33,9 +33,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<double>("NightValue")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("NormativValue")
                         .HasColumnType("REAL");
 
                     b.Property<double>("TotalResult")

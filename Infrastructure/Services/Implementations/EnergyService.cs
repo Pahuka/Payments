@@ -8,11 +8,11 @@ namespace Infrastructure.Services.Implementations;
 
 public class EnergyService : IEnergyService
 {
-	private readonly double _tarifNormativ = 4.28;
+	private readonly IEnergyRepository _energyRepository;
+	private readonly double _normativ = 164;
 	private readonly double _tarifDay = 4.9;
 	private readonly double _tarifNight = 2.31;
-	private readonly double _normativ = 164;
-	private readonly IEnergyRepository _energyRepository;
+	private readonly double _tarifNormativ = 4.28;
 	private readonly IUserRepository _userRepository;
 
 	public EnergyService(IEnergyRepository energyRepository, IUserRepository userRepository)
@@ -56,9 +56,8 @@ public class EnergyService : IEnergyService
 		var responce = new Responce<bool>();
 		try
 		{
-			var energy = new Energy()
+			var energy = new Energy
 			{
-				NormativValue = viewModel.NormativValue,
 				DayValue = viewModel.DayValue,
 				NightValue = viewModel.NightValue,
 				UserId = viewModel.UserId
@@ -93,7 +92,6 @@ public class EnergyService : IEnergyService
 				return responce;
 			}
 
-			energy.NightValue = viewModel.NormativValue;
 			energy.DayValue = viewModel.DayValue;
 			energy.NightValue = viewModel.NightValue;
 
@@ -179,7 +177,7 @@ public class EnergyService : IEnergyService
 		}
 		else
 		{
-			currentEnergy.TotalResult += (user.PeopleCount * _normativ) * _tarifNormativ;
+			currentEnergy.TotalResult += user.PeopleCount * _normativ * _tarifNormativ;
 		}
 
 		return currentEnergy;

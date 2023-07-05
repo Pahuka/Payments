@@ -45,9 +45,10 @@
 	<tr>
 		<th scope="row">ГВС</th>
 		<td>
-			<p>@Model.GetTotalResult(@Model.GVSStatistic.Select(x=> x.TotalResultTN))</p>
+			<p>Тплоноситель: @Model.GetTotalResult(Model.GVSStatistic.Select(x => x.TotalResultTN))</p>
+			<p>Тепловая энергия: @Model.GetTotalResult(Model.GVSStatistic.Select(x => x.TotalResultTE))</p>
 			<div class="btn-group" role="group">
-				<form asp-controller="Statistic" asp-action="CreateEnergyStatistic" method="get">
+				<form asp-controller="Statistic" asp-action="CreateGVSStatistic" method="get">
 					<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
 					<input type="submit" value="Добавить показания" class="btn btn-outline-dark"/>
 				</form>
@@ -57,9 +58,9 @@
 	<tr>
 		<th scope="row">ХВС</th>
 		<td>
-			<p>@Model.GetTotalResult(@Model.HVSStatistic.Select(x=> x.TotalResult))</p>
+			<p>@Model.GetTotalResult(Model.HVSStatistic.Select(x => x.TotalResult))</p>
 			<div class="btn-group" role="group">
-				<form asp-controller="Statistic" asp-action="CreateEnergyStatistic" method="get">
+				<form asp-controller="Statistic" asp-action="CreateHVSStatistic" method="get">
 					<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>
 					<input type="submit" value="Добавить показания" class="btn btn-outline-dark"/>
 				</form>
@@ -69,7 +70,7 @@
 	<tr>
 		<th scope="row">Электроэнергия</th>
 		<td>
-			<p>@Model.GetTotalResult(@Model.EnergyStatistic.Select(x=> x.TotalResult))</p>
+			<p>@Model.GetTotalResult(Model.EnergyStatistic.Select(x => x.TotalResult))</p>
 			<div class="btn-group" role="group">
 				<form asp-controller="Statistic" asp-action="CreateEnergyStatistic" method="get">
 					<input type="text" id="userId" name="userId" value="@Model.Id" hidden="true"/>

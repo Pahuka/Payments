@@ -1,6 +1,6 @@
-﻿using Application.Interfaces;
+﻿using System.Security.Claims;
+using Application.Interfaces;
 using Application.Responce;
-using System.Security.Claims;
 using Domain.Entities;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
@@ -28,7 +28,7 @@ public class AccountService : IAccountService
 					Description = "Пользователь с таким логином уже есть"
 				};
 
-			user = new User()
+			user = new User
 			{
 				Login = model.Login,
 				FirstName = model.FirstName,
@@ -47,7 +47,7 @@ public class AccountService : IAccountService
 			return new Responce<ClaimsIdentity>
 			{
 				Data = result,
-				Description = "Пользователь зарегистрирован",
+				Description = "Пользователь зарегистрирован"
 			};
 		}
 		catch (Exception ex)

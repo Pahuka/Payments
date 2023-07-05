@@ -8,9 +8,9 @@ namespace Infrastructure.Services.Implementations;
 
 public class HVSService : IHVSService
 {
+	private readonly IHVSRepository _hvsRepository;
 	private readonly double _normativ = 4.85;
 	private readonly double _tarif = 35.78;
-	private readonly IHVSRepository _hvsRepository;
 	private readonly IUserRepository _userRepository;
 
 	public HVSService(IHVSRepository hvsRepository, IUserRepository userRepository)
@@ -54,7 +54,7 @@ public class HVSService : IHVSService
 		var responce = new Responce<bool>();
 		try
 		{
-			var hvs = new HVS()
+			var hvs = new HVS
 			{
 				CurrentValue = viewModel.CurrentValue,
 				UserId = viewModel.UserId
@@ -166,13 +166,9 @@ public class HVSService : IHVSService
 			return currentHVS;
 
 		if (user.HasHvsMeter)
-		{
 			currentHVS.TotalResult += Math.Abs(currentHVS.CurrentValue - lastHVS.CurrentValue) * _tarif;
-		}
 		else
-		{
-			currentHVS.TotalResult += (user.PeopleCount * _normativ) * _tarif;
-		}
+			currentHVS.TotalResult += user.PeopleCount * _normativ * _tarif;
 
 		return currentHVS;
 	}

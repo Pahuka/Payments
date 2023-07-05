@@ -1,6 +1,4 @@
-﻿using Application.Interfaces;
-using AutoMapper;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Infrastructure.ViewModels;
 
@@ -12,6 +10,7 @@ public class UserViewModel : ViewModelBase
 		GVSStatistic = new List<GVSViewModel>();
 		HVSStatistic = new List<HVSViewModel>();
 	}
+
 	public UserViewModel(User user)
 	{
 		Id = user.Id;

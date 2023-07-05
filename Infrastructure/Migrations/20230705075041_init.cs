@@ -36,7 +36,6 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    NormativValue = table.Column<double>(type: "REAL", nullable: false),
                     DayValue = table.Column<double>(type: "REAL", nullable: false),
                     NightValue = table.Column<double>(type: "REAL", nullable: false),
                     TotalResult = table.Column<double>(type: "REAL", nullable: false),

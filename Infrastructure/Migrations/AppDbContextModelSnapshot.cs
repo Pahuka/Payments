@@ -32,9 +32,6 @@ namespace Infrastructure.Migrations
                     b.Property<double>("NightValue")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("NormativValue")
-                        .HasColumnType("REAL");
-
                     b.Property<double>("TotalResult")
                         .HasColumnType("REAL");
 

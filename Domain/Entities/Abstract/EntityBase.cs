@@ -7,7 +7,7 @@ public class EntityBase : IEntityBase
 		Id = Guid.NewGuid();
 		CreatedDate = DateTime.Now;
 	}
-	
+
 	public Guid Id { get; set; }
 	public DateTime CreatedDate { get; set; }
 }
