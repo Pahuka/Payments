@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PaymentsWeb.Controllers;
@@ -13,12 +14,14 @@ public class UserController : Controller
 		_userService = userService;
 	}
 
+	[Authorize(Roles = "Administrator")]
 	[HttpGet]
 	public IActionResult CreateUser()
 	{
 		return View(new UserViewModel());
 	}
 
+	[Authorize(Roles = "Administrator")]
 	[HttpPost]
 	public async Task<IActionResult> CreateUser(UserViewModel userViewModel)
 	{
@@ -36,6 +39,7 @@ public class UserController : Controller
 		return View();
 	}
 
+	[Authorize(Roles = "Administrator")]
 	[HttpGet]
 	public async Task<IActionResult> GetAllUsers()
 	{

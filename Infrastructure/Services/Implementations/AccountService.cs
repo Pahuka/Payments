@@ -78,7 +78,7 @@ public class AccountService : IAccountService
 			if (user == null)
 				return new Responce<ClaimsIdentity>
 				{
-					Description = "Пользователь не найден"
+					Description = "Неверный пароль или логин"
 				};
 
 			if (user.Password != model.Password)
